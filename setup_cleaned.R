@@ -8,6 +8,7 @@ library(mapview)
 library(sf)
 library(stringr)
 library(plotly) 
+library(readr)
 
 
 
@@ -243,7 +244,7 @@ lang_div_neigh <- div_calc_lang(neigh_city_sum)
 
 
 # Sample Map --------------------------------------------------------------
-normalized_pal <- colorQuantile(palette = "viridis", domain = lang_div_tract@data[chosen_graph], n = 5)
+normalized_pal <- leaflet::colorQuantile(palette = "viridis", domain = lang_div_tract@data[chosen_graph], n = 5)
 raw_pal <- colorNumeric(palette = "viridis", domain = c(0, 1 - (1/lang_max[chosen_graph])),
                         na.color = "#808080")
 
