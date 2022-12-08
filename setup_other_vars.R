@@ -36,7 +36,27 @@ div_prop <- function(var, total_pop) {
   
   df_groups <- census_pob_pull %>% 
     mutate(nat_for_nat = `Native:`, 
-           nat_for_for = `Foreign:`)
+           nat_for_for = `Foreign:`, 
+           
+           all_Northeast = '', 
+           all_Midwest = '', 
+           all_South = '', 
+           all_West = '', 
+           all_NA = '', 
+           all_LA = '', 
+           all_Asia = '', 
+           all_Oceania = '', 
+           all_Africa ='', 
+           all_Europe = '', 
+           
+           continent_NA = '', 
+           continent_LA = '', 
+           continent_ASia = '', 
+           continent_Africa = '', 
+           continent_Oceania = '', 
+           continent_Europe = '', 
+           
+           )
   
   df_values <- df_groups %>% 
     mutate(val_eng_not = 1 - (div_prop(eng_not_Speaks_only_English,Total)+
