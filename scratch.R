@@ -70,6 +70,6 @@ dat <- lang_vars %>% select(nameE,label) %>%
 
 dat$label_small[1]<- "Total"
 
-lang_pull_small <- %>% 
+lang_pull_small <- lang_pull_raw %>% 
   select(GEOID, NAME, any_of(dat$label_small), geometry)
 
