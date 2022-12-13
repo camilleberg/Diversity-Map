@@ -41,4 +41,5 @@ diversity_desg_fxn <- function(census_data) {
   }
 }
 
+VARS$diversity_desg <- NA
 diversity_desg_fxn(VARS)
