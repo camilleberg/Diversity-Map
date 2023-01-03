@@ -4,6 +4,18 @@
 # setup_other_vars.R or
 # setup_cleaned.R
 
+# reading in the csv
+library(readxl)
+library(stringr)
+library(dplyr)
+categories <- read_xlsx("Diversity Map Categories.xlsx")
+
+# from setup, cleaned
+div_prop <- function(var, total_pop) {
+  x <- (var/total_pop)^2
+  return(x)
+}
+
 # creating unique variable names 
 categories$var_names <- paste0(categories$title, "_", categories$group_name, "_",
                                str_replace_all(categories$var_description, " ", "_"))
@@ -58,6 +70,19 @@ other_var_raw <- tidycensus::get_acs(geography = "tract",
   filter(!(str_detect(NAME,"Census Tract 99")|str_detect(NAME,"Census Tract 18")
            |str_detect(NAME,"Census Tract 17")|str_detect(NAME,"Census Tract 16")
            |str_detect(NAME,"Census Tract 9812.01")|str_detect(NAME,"Census Tract 9801.01")))
+
+
+# add value / prop columns? 
+
+val_all = 1 - div_prop(startsWith(categories$var_names, "pob_nat_for"))
+
+dat <- other_var_small %>%
+  select(starts_with(categories$census_label[startsWith(categories$var_names, "pob_nat_for")]))
+
+apply(x = dat, margin = 1, FUN = sum)
+lapply(dat, sum)
+
+sum(other_var_raw$B05002_002E)
 
 #Removing margin of error columns
 other_var_small <- other_var_raw %>% 
