@@ -1,28 +1,52 @@
 # to help
 
+## TO DO:
+# fix high school / GED error 
+#   - the census isn't pulling the High School graduate
+#   - might have to do manually 
+
 # make sure to run up to line 26 in either 
 # setup_other_vars.R or
 # setup_cleaned.R
 
-# reading in the csv
+## SETUP ------------------------------------------------------------------
+rm(list = ls())
+
+# loading libraries
+remotes::install_github("walkerke/tidycensus")
+devtools::install_github("r-spatial/leafpop")
+library(tidycensus)
+library(tidyverse)
+library(leaflet)
+library(leafpop)
+library(mapview)
+library(sf)
+library(stringr)
+library(plotly) 
+library(readr)
 library(readxl)
 library(stringr)
 library(dplyr)
-categories <- read_xlsx("Diversity Map Categories.xlsx")
+library(janitor)
 
-# from setup, cleaned
-div_prop <- function(var, total_pop) {
-  x <- (var/total_pop)^2
-  return(x)
-}
+
+VARS <- tidycensus::load_variables(dataset = 'acs5', year = 2020, cache = T)
+
+
+## PULLING AND ORGANZIING THE DATA -----------------------------------------
+
+# categories <- read_xlsx("Diversity Map Categories.xlsx")
+categories <- read.csv("Diversity Map Categories.csv")
 
 # creating unique variable names 
 categories$var_names <- paste0(categories$title, "_", categories$group_name, "_",
                                str_replace_all(categories$var_description, " ", "_"))
+categories$group_labels <- paste0(categories$title, "_", categories$group_name)
 
 # initialing empty column to assign new var
 categories$census_label <- NA
-  
+
+# looping through to fill with the relevant census var names
 for(i in 1:nrow(categories)){
     # selecting only the table of interest
     table <- VARS %>%
@@ -49,13 +73,13 @@ for(i in 1:nrow(categories)){
 # grouping and combining all the labels to the distinct groups
 census_groups <- categories %>%
   group_by(var_names) %>%
-  mutate(labels = paste0(census_label, collapse = ", ")) %>%
+  mutate(labels = paste0(census_label, collapse = ",")) %>%
   distinct(labels)
 
-# unlisting variable names 
+# un-listing variable names 
 acs_pull_labels <- unlist(strsplit(unique(categories$census_label), ",")) 
 acs_pull_labels <- acs_pull_labels[!acs_pull_labels == "NA"]
-  # fix NA issue later
+  # fix NA issue later (this is related to the High School thing)
 
 # pulling census data
 other_var_raw <- tidycensus::get_acs(geography = "tract", 
@@ -71,30 +95,101 @@ other_var_raw <- tidycensus::get_acs(geography = "tract",
            |str_detect(NAME,"Census Tract 17")|str_detect(NAME,"Census Tract 16")
            |str_detect(NAME,"Census Tract 9812.01")|str_detect(NAME,"Census Tract 9801.01")))
 
-
-# add value / prop columns? 
-
-val_all = 1 - div_prop(startsWith(categories$var_names, "pob_nat_for"))
-
-dat <- other_var_small %>%
-  select(starts_with(categories$census_label[startsWith(categories$var_names, "pob_nat_for")]))
-
-apply(x = dat, margin = 1, FUN = sum)
-lapply(dat, sum)
-
-sum(other_var_raw$B05002_002E)
-
-#Removing margin of error columns
+# Removing margin of error columns
 other_var_small <- other_var_raw %>% 
   select(!ends_with("M"))
+rm(other_var_raw)
 
-##Formatting data
-dat <- lang_vars %>% select(nameE,label) %>% 
-  mutate(label_small = str_sub(label, start = (str_locate(label, 'Estimate!!Total:!!')[,2] + 1))) %>% 
-  select(-label)
+# removing the E from the end of the variable names
+colnames(other_var_small)[3:length(colnames(other_var_small))-1] <- 
+  substr(colnames(other_var_small)[3:length(colnames(other_var_small))-1], 1, nchar(colnames(other_var_small)[3:length(colnames(other_var_small))-1])-1)
+ 
+# expand the categories into new table with variables for each column #
 
-dat$label_small[1]<- "Total"
+# initializing labeling convention
+col_var_names <- c()
+for(i in 1:24) {
+  col_var_names[i] <- paste0("var.", i)
+}
+  # 24 was chosen through looking at the data, but there's probably a way to soft-code it
 
-lang_pull_small <- lang_pull_raw %>% 
-  select(GEOID, NAME, any_of(dat$label_small), geometry)
+# expanding out the var names into separate cells
+census_groups_expanded <- left_join(census_groups,separate(census_groups, col = labels, into = col_var_names, sep = ","), 
+          by = "var_names")
 
+# making addition columns 
+div_groups_labels <- census_groups_expanded %>% 
+  select(-labels) %>%
+  t() %>% as_tibble() %>% 
+  row_to_names(row_number = 1) 
+
+# adding the calculated rows to the census data # 
+
+# initializing the df 
+other_var_groups <- tibble(GEOID = other_var_small$GEOID, 
+                           NAME = other_var_small$NAM, # I don't know why it's doing this but 
+                           geometry = other_var_small$geometry)
+
+# selecting only those of interest and adding them
+
+grouping_fxn <- function(div_label) {
+  x <- which(colnames(div_groups_labels) == paste0(div_label))
+  
+  # this basically selects the relevant census variables related to each group
+  # and then adds them
+  return(other_var_small %>% 
+    as_tibble() %>%
+    select(
+        colnames(other_var_small)[colnames(other_var_small) %in% (div_groups_labels[,x] %>% array())[[1]]]
+      ) %>%
+      mutate(val = rowSums(across())) %>% select(val) %>%
+      rename(!!sym(div_label) := val)
+  )
+}
+
+for(i in 1:length(colnames(div_groups_labels))) {
+  other_var_groups <- cbind(other_var_groups, grouping_fxn(colnames(div_groups_labels)[i]))
+}
+
+
+## ANALYZING THE DATA ------------------------------------------------------
+
+# basically, for the value columns, it's the difference of 1 and the sum of all the diff categories 
+
+# from setup_cleaned.R
+div_prop <- function(var, total_pop) {
+  x <- (var/total_pop)^2
+  return(x)
+}
+
+# separating the df into the general demographic variables
+  # NOTE: this part will be hard coded
+
+df_educ <- other_var_groups %>% 
+  select(c(GEOID, NAME, geometry, starts_with("educ")))
+
+df_pob <- other_var_groups %>% 
+  select(c(GEOID, NAME, geometry, starts_with("pob")))
+
+# performing the calculations
+
+unique(categories$group_labels)
+
+slice <- df_pob %>% 
+  rename(total = ends_with("Total")) %>%
+  select(!c(GEOID, NAME, geometry))
+
+for(i in 1:(ncol(slice))) {
+  slice <- cbind(slice, div_prop(slice[, i], slice$total))
+  colnames(slice)[ncol(slice)] <- paste0(colnames(slice)[i], "_calc")
+}
+
+# variable names
+group_var_names <- colnames(slice)[!grepl("calc$", colnames(slice))]
+
+slice %>% select(ends_with("calc")) %>% 
+  t() %>% as_tibble() %>% 
+  mutate(var_names = group_var_names) %>%
+  left_join(categories[c("var_names", "group_labels")], by = "var_names") %>%
+  dplyr::group_by(group_labels) %>%
+  dplyr::summarise(across(everything(), list = sum), .groups = 'drop')
