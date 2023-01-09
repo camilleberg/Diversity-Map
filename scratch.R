@@ -29,11 +29,9 @@ library(stringr)
 library(dplyr)
 library(janitor)
 
+## PULLING AND ORGANZIING THE DATA -----------------------------------------
 
 VARS <- tidycensus::load_variables(dataset = 'acs5', year = 2020, cache = T)
-
-
-## PULLING AND ORGANZIING THE DATA -----------------------------------------
 
 # categories <- read_xlsx("Diversity Map Categories.xlsx")
 categories <- read.csv("Diversity Map Categories.csv")
@@ -165,31 +163,109 @@ div_prop <- function(var, total_pop) {
 # separating the df into the general demographic variables
   # NOTE: this part will be hard coded
 
-df_educ <- other_var_groups %>% 
+educ_raw <- other_var_groups %>% 
   select(c(GEOID, NAME, geometry, starts_with("educ")))
 
-df_pob <- other_var_groups %>% 
+pob_raw <- other_var_groups %>% 
   select(c(GEOID, NAME, geometry, starts_with("pob")))
 
 # performing the calculations
 
-unique(categories$group_labels)
-
-slice <- df_pob %>% 
-  rename(total = ends_with("Total")) %>%
-  select(!c(GEOID, NAME, geometry))
-
-for(i in 1:(ncol(slice))) {
-  slice <- cbind(slice, div_prop(slice[, i], slice$total))
-  colnames(slice)[ncol(slice)] <- paste0(colnames(slice)[i], "_calc")
+div_index_fxn <- function(dat, var_type, geography) {
+  if(geography == "tract") {
+    slice <- dat %>% 
+      rename(total = ends_with("Total")) %>%
+      select(!c(GEOID, NAME, geometry))
+  } else if(geography == "nbhd") {
+    slice <- dat %>% 
+      rename(total = ends_with("Total")) %>%
+      select(-tract20_nbhd) %>%
+      mutate_all(as.numeric)
+  }
+  
+  
+  # this calculates the divraw numbers
+  for(i in 1:(ncol(slice))) {
+    slice <- cbind(slice, div_prop(slice[, i], slice$total))
+    colnames(slice)[ncol(slice)] <- paste0(colnames(slice)[i], "_calc")
+  }
+  
+  # this takes all the variables and adds them based off which group they've been assigned to
+  # i.e. this is the function that creates the index
+  group_calc_fxn <- function(group_label) {
+    label <- paste0("val_", paste0(group_label))
+    return(slice %>%
+             select(ends_with("calc")) %>%
+             mutate(
+               div_val = select(., starts_with(paste0(group_label))) %>% rowSums()
+             ) %>% select(div_val) %>%
+             rename(!!sym(label):= div_val)
+           )
+  }
+  
+  # variable/group names
+  group_names <- categories$group_labels[grepl(paste0("^", var_type), categories$group_labels)]
+  
+  # initializing empty df
+  div_ind <- group_calc_fxn(group_names[1])
+  
+  # looping through
+  for(i in 2:length(group_names)) {
+    div_ind <- cbind(div_ind, group_calc_fxn(group_names[i]))
+  }
+  
+  return(div_ind[unique(colnames(div_ind))])
 }
 
-# variable names
-group_var_names <- colnames(slice)[!grepl("calc$", colnames(slice))]
+# adding diversity index calculations to larger variable data frames
+pob_tract <- cbind(pob_raw, div_index_fxn(pob_raw, "pob", geography = "tract")[-1])
+educ_tract <- cbind(educ_raw, div_index_fxn(educ_raw, "educ", geography = "tract")[-1])
+  # this is to remove the total column
 
-slice %>% select(ends_with("calc")) %>% 
-  t() %>% as_tibble() %>% 
-  mutate(var_names = group_var_names) %>%
-  left_join(categories[c("var_names", "group_labels")], by = "var_names") %>%
-  dplyr::group_by(group_labels) %>%
-  dplyr::summarise(across(everything(), list = sum), .groups = 'drop')
+## NEIGHBORHOOD AND CITY ---------------------------------------------------
+
+### NEIGHBORHOOD
+TRACT_TO_NEIGHBORHOOD <- readxl::read_xlsx("geo20_tract_block group comparison.xlsx")
+
+## for place of birth
+pob_nbhd <- pob_raw %>%
+  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+  filter((!is.na(tract20_nbhd))| pob_total_Total == 0) %>%
+  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+  as_tibble() %>%   
+  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+  group_by(tract20_nbhd) %>%
+  summarise(across(everything(), ~ sum(., is.na(.), 0))) 
+
+# adding Boston row
+total <- c(tract20_nbhd="Citywide", apply(pob_nbhd[,-1], FUN = sum, MAR = 2))
+pob_nbhd <- rbind(pob_nbhd, total)
+
+pob_nbhd <- cbind(pob_nbhd, div_index_fxn(pob_nbhd, "pob", "nbhd")[-1])
+
+
+## for education
+educ_nbhd <- educ_raw %>%
+  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+  filter((!is.na(tract20_nbhd))| educ_total_Total == 0) %>%
+  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+  as_tibble() %>%   
+  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+  group_by(tract20_nbhd) %>%
+  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
+
+# adding Boston row
+total <- c(tract20_nbhd="Citywide", apply(educ_nbhd[,-1], FUN = sum, MAR = 2))
+educ_nbhd <- rbind(educ_nbhd, total)
+
+educ_nbhd <- cbind(educ_nbhd, div_index_fxn(educ_nbhd, "educ", "nbhd")[-1])
+
+### CITY
+# other cities (?)
+
+
+## WRITING OUT THE DATA ----------------------------------------------------
+
+# write_rds(lang_div_tract, "Language_diversity_tract.RDS")
+# write_rds(lang_div_neigh, "Language_diversity_neighborhood.RDS")
+# write_rds(lang_div_cities, "Language_diversity_cities.RDS")
