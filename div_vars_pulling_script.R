@@ -34,12 +34,15 @@ library(janitor)
 VARS <- tidycensus::load_variables(dataset = 'acs5', year = 2020, cache = T)
 
 # categories <- read_xlsx("Diversity Map Categories.xlsx")
-categories <- read.csv("Diversity Map Categories.csv")
+categories <- read.csv("Diversity Map Categories all.csv")
 
 # creating unique variable names 
 categories$var_names <- paste0(categories$title, "_", categories$group_name, "_",
                                str_replace_all(categories$var_description, " ", "_"))
 categories$group_labels <- paste0(categories$title, "_", categories$group_name)
+
+# adjusting for special characters in the income
+categories$var_name_ending <- str_replace_all(categories$var_name_ending, "\\$", "\\\\$")
 
 # initialing empty column to assign new var
 categories$census_label <- NA
@@ -48,7 +51,7 @@ categories$census_label <- NA
 for(i in 1:nrow(categories)){
     # selecting only the table of interest
     table <- VARS %>%
-      filter(grepl(paste0("^", categories$table_name[i]), VARS$name)) %>%
+      filter(grepl(paste0("^", categories$table_name[i], "_"), VARS$name)) %>%
       select(label, name)
     
     # selecting from the table of interest 
@@ -175,6 +178,12 @@ educ_raw <- other_var_groups %>%
 pob_raw <- other_var_groups %>% 
   select(c(GEOID, NAME, geometry, starts_with("pob")))
 
+age_raw <- other_var_groups %>% 
+  select(c(GEOID, NAME, geometry, starts_with("age")))
+
+hh_income_raw <- other_var_groups %>% 
+  select(c(GEOID, NAME, geometry, starts_with("hh_income")))
+
 # performing the calculations
 
 div_index_fxn <- function(dat, var_type, geography) {
@@ -226,6 +235,8 @@ div_index_fxn <- function(dat, var_type, geography) {
 # adding diversity index calculations to larger variable data frames
 pob_tract <- cbind(pob_raw, div_index_fxn(pob_raw, "pob", geography = "tract")[-1])
 educ_tract <- cbind(educ_raw, div_index_fxn(educ_raw, "educ", geography = "tract")[-1])
+age_tract <- cbind(age_raw, div_index_fxn(age_raw, "age", geography = "tract")[-1])
+hh_income_tract <- cbind(hh_income_raw, div_index_fxn(hh_income_raw, "hh_income", geography = "tract")[-1])
   # this is to remove the total column
 
 ## NEIGHBORHOOD AND CITY ---------------------------------------------------
@@ -266,6 +277,39 @@ educ_nbhd <- rbind(educ_nbhd, total)
 
 educ_nbhd <- cbind(educ_nbhd, div_index_fxn(educ_nbhd, "educ", "nbhd")[-1])
 
+
+## for age
+age_nbhd <- age_raw %>%
+  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+  filter((!is.na(tract20_nbhd))| age_total_Total == 0) %>%
+  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+  as_tibble() %>%   
+  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+  group_by(tract20_nbhd) %>%
+  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
+
+# adding Boston row
+total <- c(tract20_nbhd="Citywide", apply(age_nbhd[,-1], FUN = sum, MAR = 2))
+age_nbhd <- rbind(age_nbhd, total)
+
+age_nbhd <- cbind(age_nbhd, div_index_fxn(age_nbhd, "age", "nbhd")[-1])
+
+
+## for education
+hh_income_nbhd <- hh_income_raw %>%
+  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+  filter((!is.na(tract20_nbhd))| hh_income_total_Total == 0) %>%
+  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+  as_tibble() %>%   
+  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+  group_by(tract20_nbhd) %>%
+  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
+
+# adding Boston row
+total <- c(tract20_nbhd="Citywide", apply(hh_income_nbhd[,-1], FUN = sum, MAR = 2))
+hh_income_nbhd <- rbind(hh_income_nbhd, total)
+
+hh_income_nbhd <- cbind(hh_income_nbhd, div_index_fxn(hh_income_nbhd, "educ", "nbhd")[-1])
 ### CITY
 # other cities (?)
 
@@ -278,3 +322,11 @@ write_rds(pob_nbhd, "Place_of_Birth_diversity_neighborhood.RDS")
 
 write_rds(educ_tract, "Education_diversity_tract.RDS")
 write_rds(educ_nbhd, "Education_diversity_neighborhood.RDS")
+
+write_rds(age_tract, "Age_diversity_tract.RDS")
+write_rds(age_nbhd, "Age_diversity_neighborhood.RDS")
+
+write_rds(hh_income_tract, "Household_Income_diversity_tract.RDS")
+write_rds(hh_income_nbhd, "Household_Income_diversity_neighborhood.RDS")
+
+
