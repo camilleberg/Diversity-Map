@@ -27,6 +27,7 @@ library(readr)
 library(readxl)
 library(stringr)
 library(dplyr)
+library(janitor)
 
 ## PULLING AND ORGANZIING THE DATA -----------------------------------------
 
@@ -51,21 +52,21 @@ for(i in 1:nrow(categories)){
       select(label, name)
     
     # selecting from the table of interest 
-    if(categories$title[i] == "educ" | "age") {
+    if(categories$title[i] == "educ" | categories$title[i] == "age") {
       
 
-      if(categories$var_name_ending[i] == "High school graduate (includes equivalency)") {
+      if(grepl("^High school", categories$var_name_ending[i])) {
         # manually fixing the high school thing
         male <- "B15002_011"; female <- "B15002_028"
       } else {
         # aggregating the male and female var names because they're segregated for educ
         male <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][1]
         female <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][2]
-      
-        # assigning new label
-        categories$census_label[i] <- paste0(male, ",", female)
-        # NOTE: the comma here should match the comma later as a separator 
       }
+      
+      # assigning new label
+      categories$census_label[i] <- paste0(male, ",", female)
+      # NOTE: the comma here should match the comma later as a separator 
       
     } else {
       # assigning new label 
