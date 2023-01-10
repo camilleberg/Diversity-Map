@@ -1,13 +1,15 @@
-# to help
+## Script for Diversity Index Map  ##
+
+# Written by: Camille Bergeron
+# Written on: December 12, 2022
+# Last Modified: January 9, 2023
 
 ## TO DO:
-# fix high school / GED error 
-#   - the census isn't pulling the High School graduate
-#   - might have to do manually 
+# make more automated
+# soft code the length of the census group expanded
+# automate the nbhd code
 
-# make sure to run up to line 26 in either 
-# setup_other_vars.R or
-# setup_cleaned.R
+# add cities
 
 ## SETUP ------------------------------------------------------------------
 rm(list = ls())
@@ -28,6 +30,8 @@ library(readxl)
 library(stringr)
 library(dplyr)
 library(janitor)
+
+# note: you may need to run these libraries individually 
 
 ## PULLING AND ORGANZIING THE DATA -----------------------------------------
 
