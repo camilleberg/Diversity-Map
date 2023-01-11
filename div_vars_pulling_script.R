@@ -2,7 +2,8 @@
 
 # Written by: Camille Bergeron
 # Written on: December 12, 2022
-# Last Modified: January 9, 2023
+# Last Modified: January 11, 2023
+  # subtracted sum of the div calculations
 
 ## TO DO:
 # make more automated
@@ -38,7 +39,8 @@ library(janitor)
 VARS <- tidycensus::load_variables(dataset = 'acs5', year = 2020, cache = T)
 
 # categories <- read_xlsx("Diversity Map Categories.xlsx")
-categories <- read.csv("Diversity Map Categories all.csv")
+categories <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "categories")
+
 
 # creating unique variable names 
 categories$var_names <- paste0(categories$title, "_", categories$group_name, "_",
@@ -143,19 +145,24 @@ other_var_groups <- tibble(GEOID = other_var_small$GEOID,
 
 # selecting only those of interest and adding them
 
-grouping_fxn <- function(div_label) {
+grouping_fxn <- function(div_label, city = F) {
   x <- which(colnames(div_groups_labels) == paste0(div_label))
+  
+  if(city == T){
+    other_var_small <- cities_small
+  }
   
   # this basically selects the relevant census variables related to each group
   # and then adds them
-  return(other_var_small %>% 
+  dat <- other_var_small %>% 
     as_tibble() %>%
     select(
-        colnames(other_var_small)[colnames(other_var_small) %in% (div_groups_labels[,x] %>% array())[[1]]]
-      ) %>%
-      mutate(val = rowSums(across())) %>% select(val) %>%
-      rename(!!sym(div_label) := val)
-  )
+      colnames(other_var_small)[colnames(other_var_small) %in% (div_groups_labels[,x] %>% array())[[1]]]
+    ) %>%
+    mutate(val = rowSums(across())) %>% select(val) %>%
+    rename(!!sym(div_label) := val)
+  
+  return(dat)
 }
 
 for(i in 1:length(colnames(div_groups_labels))) {
@@ -200,6 +207,10 @@ div_index_fxn <- function(dat, var_type, geography) {
       rename(total = ends_with("Total")) %>%
       select(-tract20_nbhd) %>%
       mutate_all(as.numeric)
+  } else if(geography == "city") {
+    slice <- dat %>% 
+      rename(total = ends_with("Total")) %>%
+      select(!c(GEOID, NAME))
   }
   
   
@@ -217,7 +228,7 @@ div_index_fxn <- function(dat, var_type, geography) {
              select(ends_with("calc")) %>%
              mutate(
                div_val = select(., starts_with(paste0(group_label))) %>% rowSums()
-             ) %>% select(div_val) %>%
+             ) %>% select(div_val) %>% mutate(div_val = 1 - div_val) %>%
              rename(!!sym(label):= div_val)
            )
   }
@@ -314,23 +325,72 @@ total <- c(tract20_nbhd="Citywide", apply(hh_income_div_neigh[,-1], FUN = sum, M
 hh_income_div_neigh <- rbind(hh_income_div_neigh, total)
 
 hh_income_div_neigh <- cbind(hh_income_div_neigh, div_index_fxn(hh_income_div_neigh, "hh_income", "nbhd")[-1])
+
 ### CITY
-# other cities (?)
+cities_of_int <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "cities")
+
+cities_raw <- get_acs(geography = "place", 
+                  variable = acs_pull_labels, #34, 
+                  output = "wide",
+                  year = 2020,
+                  cache_table = T,
+                  show_call = TRUE) 
+
+## Essentially, all the steps from earlier wil just be repeated here
+cities_small <- cities_raw %>%
+  filter(NAME %in% unlist(cities_of_int)) %>%
+  select(!ends_with("M"))
+rm(cities_raw)
+
+# removing the E from the end of the variable names
+colnames(cities_small)[3:length(colnames(cities_small))-1] <- 
+  substr(colnames(cities_small)[3:length(colnames(cities_small))-1], 1, nchar(colnames(cities_small)[3:length(colnames(cities_small))-1])-1)
+
+# adding the calculated rows to the census data # 
+
+# initializing the df 
+cities_groups <- tibble(GEOID = cities_small$GEOID, 
+                           NAME = cities_small$NAM) # I don't know why it's doing this but 
+
+for(i in 1:length(colnames(div_groups_labels))) {
+  cities_groups <- cbind(cities_groups, grouping_fxn(colnames(div_groups_labels)[i], city = T))
+}
+
+educ_pull_city_raw <- cities_groups %>% 
+  select(c(GEOID, NAME, starts_with("educ")))
+
+pob_pull_city_raw <- cities_groups %>% 
+  select(c(GEOID, NAME, starts_with("pob")))
+
+age_pull_city_raw <- cities_groups %>% 
+  select(c(GEOID, NAME, starts_with("age")))
+
+hh_income_pull_city_raw <- cities_groups %>% 
+  select(c(GEOID, NAME, starts_with("hh_income")))
+
+pob_div_city <- cbind(pob_pull_city_raw, div_index_fxn(pob_pull_city_raw, "pob", geography = "city")[-1])
+educ_div_city <- cbind(educ_pull_city_raw, div_index_fxn(educ_pull_city_raw, "educ", geography = "city")[-1])
+age_div_city <- cbind(age_pull_city_raw, div_index_fxn(age_pull_city_raw, "age", geography = "city")[-1])
+hh_income_div_city <- cbind(hh_income_pull_city_raw, div_index_fxn(hh_income_pull_city_raw, "hh_income", geography = "city")[-1])
+
 
 
 ## WRITING OUT THE DATA ----------------------------------------------------
 
-write_rds(pob_div_tract, "Place_of_Birth_diversity_div_tract.RDS")
+write_rds(pob_div_tract, "Place_of_Birth_diversity_tract.RDS")
 write_rds(pob_div_neigh, "Place_of_Birth_diversity_neighborhood.RDS")
-# write_rds(lang_div_cities, "Language_diversity_cities.RDS")
+write_rds(pob_div_city, "Place_of_Birth_diversity_city.RDS")
 
-write_rds(educ_div_tract, "Education_diversity_div_tract.RDS")
+write_rds(educ_div_tract, "Education_diversity_tract.RDS")
 write_rds(educ_div_neigh, "Education_diversity_neighborhood.RDS")
+write_rds(pob_div_city, "Education_diversity_city.RDS")
 
-write_rds(age_div_tract, "Age_diversity_div_tract.RDS")
+write_rds(age_div_tract, "Age_diversity_tract.RDS")
 write_rds(age_div_neigh, "Age_diversity_neighborhood.RDS")
+write_rds(pob_div_city, "Age_diversity_city.RDS")
 
-write_rds(hh_income_div_tract, "Household_Income_diversity_div_tract.RDS")
+write_rds(hh_income_div_tract, "Household_Income_diversity_tract.RDS")
 write_rds(hh_income_div_neigh, "Household_Income_diversity_neighborhood.RDS")
+write_rds(pob_div_city, "Household_Income_diversity_city.RDS")
 
 
