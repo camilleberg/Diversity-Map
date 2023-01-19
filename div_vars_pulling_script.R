@@ -2,15 +2,15 @@
 
 # Written by: Camille Bergeron
 # Written on: December 12, 2022
-# Last Modified: January 11, 2023
-  # subtracted sum of the div calculations
+
+## Last Modified: January 19, 2023
+  # added race variable
 
 ## TO DO:
 # make more automated
-# soft code the length of the census group expanded
-# automate the nbhd code
+# soft code the length of the census_groups_expanded (?)
+# automate the nbhd code (?)
 
-# add cities
 
 ## SETUP ------------------------------------------------------------------
 rm(list = ls())
@@ -55,32 +55,32 @@ categories$census_label <- NA
 
 # looping through to fill with the relevant census var names
 for(i in 1:nrow(categories)){
-    # selecting only the table of interest
-    table <- VARS %>%
-      filter(grepl(paste0("^", categories$table_name[i], "_"), VARS$name)) %>%
-      select(label, name)
+  # selecting only the table of interest
+  table <- VARS %>%
+    filter(grepl(paste0("^", categories$table_name[i], "_"), VARS$name)) %>%
+    select(label, name)
+  
+  # selecting from the table of interest 
+  if(categories$title[i] == "educ" | categories$title[i] == "age") {
     
-    # selecting from the table of interest 
-    if(categories$title[i] == "educ" | categories$title[i] == "age") {
-      
-
-      if(grepl("^High school", categories$var_name_ending[i])) {
-        # manually fixing the high school thing
-        male <- "B15002_011"; female <- "B15002_028"
-      } else {
-        # aggregating the male and female var names because they're segregated for educ
-        male <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][1]
-        female <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][2]
-      }
-      
-      # assigning new label
-      categories$census_label[i] <- paste0(male, ",", female)
-      # NOTE: the comma here should match the comma later as a separator 
-      
+    
+    if(grepl("^High school", categories$var_name_ending[i])) {
+      # manually fixing the high school thing
+      male <- "B15002_011"; female <- "B15002_028"
     } else {
-      # assigning new label 
-      categories$census_label[i] <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)]
+      # aggregating the male and female var names because they're segregated for educ and age
+      male <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][1]
+      female <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][2]
     }
+    
+    # assigning new label
+    categories$census_label[i] <- paste0(male, ",", female)
+    # NOTE: the comma here should match the comma later as a separator 
+    
+  } else {
+    # assigning new label 
+    categories$census_label[i] <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)]
+  }
 }                                             
 
 # grouping and combining all the labels to the distinct groups
@@ -92,18 +92,18 @@ census_groups <- categories %>%
 # un-listing variable names 
 acs_pull_labels <- unlist(strsplit(unique(categories$census_label), ",")) 
 acs_pull_labels <- acs_pull_labels[!acs_pull_labels == "NA"]
-  # fix NA issue later (this is related to the High School thing)
+# fix NA issue later (this is related to the High School thing)
 
 # pulling census data
 other_var_pull_raw <- tidycensus::get_acs(geography = "tract", 
-                    variable = acs_pull_labels, #34, 
-                    output = "wide",
-                    state = "MA",
-                    county = "Suffolk",
-                    geometry = TRUE,
-                    year = 2020,
-                    cache_table = T,
-                    show_call = TRUE) %>% 
+                                          variable = acs_pull_labels, #34, 
+                                          output = "wide",
+                                          state = "MA",
+                                          county = "Suffolk",
+                                          geometry = TRUE,
+                                          year = 2020,
+                                          cache_table = T,
+                                          show_call = TRUE) %>% 
   filter(!(str_detect(NAME,"Census Tract 99")|str_detect(NAME,"Census Tract 18")
            |str_detect(NAME,"Census Tract 17")|str_detect(NAME,"Census Tract 16")
            |str_detect(NAME,"Census Tract 9812.01")|str_detect(NAME,"Census Tract 9801.01")))
@@ -116,7 +116,7 @@ rm(other_var_pull_raw)
 # removing the E from the end of the variable names
 colnames(other_var_small)[3:length(colnames(other_var_small))-1] <- 
   substr(colnames(other_var_small)[3:length(colnames(other_var_small))-1], 1, nchar(colnames(other_var_small)[3:length(colnames(other_var_small))-1])-1)
- 
+
 # expand the categories into new table with variables for each column #
 
 # initializing labeling conventio
@@ -124,11 +124,11 @@ col_var_names <- c()
 for(i in 1:24) {
   col_var_names[i] <- paste0("var.", i)
 }
-  # 24 was chosen through looking at the data, but there's probably a way to soft-code it
+# 24 was chosen through looking at the data, but there's probably a way to soft-code it
 
 # expanding out the var names into separate cells
 census_groups_expanded <- left_join(census_groups,separate(census_groups, col = labels, into = col_var_names, sep = ","), 
-          by = "var_names")
+                                    by = "var_names")
 
 # making addition columns 
 div_groups_labels <- census_groups_expanded %>% 
@@ -181,7 +181,7 @@ div_prop <- function(var, total_pop) {
 }
 
 # separating the df into the general demographic variables
-  # NOTE: this part will be hard coded
+# NOTE: this part will be hard coded
 
 educ_pull_raw <- other_var_groups %>% 
   select(c(GEOID, NAME, geometry, starts_with("educ")))
@@ -194,6 +194,9 @@ age_pull_raw <- other_var_groups %>%
 
 hh_income_pull_raw <- other_var_groups %>% 
   select(c(GEOID, NAME, geometry, starts_with("hh_income")))
+
+race_pull_raw <- other_var_groups %>% 
+  select(c(GEOID, NAME, geometry, starts_with("race")))
 
 # performing the calculations
 
@@ -230,7 +233,7 @@ div_index_fxn <- function(dat, var_type, geography) {
                div_val = select(., starts_with(paste0(group_label))) %>% rowSums()
              ) %>% select(div_val) %>% mutate(div_val = 1 - div_val) %>%
              rename(!!sym(label):= div_val)
-           )
+    )
   }
   
   # variable/group names
@@ -252,7 +255,8 @@ pob_div_tract <- cbind(pob_pull_raw, div_index_fxn(pob_pull_raw, "pob", geograph
 educ_div_tract <- cbind(educ_pull_raw, div_index_fxn(educ_pull_raw, "educ", geography = "tract")[-1])
 age_div_tract <- cbind(age_pull_raw, div_index_fxn(age_pull_raw, "age", geography = "tract")[-1])
 hh_income_div_tract <- cbind(hh_income_pull_raw, div_index_fxn(hh_income_pull_raw, "hh_income", geography = "tract")[-1])
-  # this is to remove the total column
+race_div_tract <- cbind(race_pull_raw, div_index_fxn(race_pull_raw, "race", geography = "tract")[-1])
+# this is to remove the total column
 
 ## NEIGHBORHOOD AND CITY ---------------------------------------------------
 
@@ -326,15 +330,32 @@ hh_income_div_neigh <- rbind(hh_income_div_neigh, total)
 
 hh_income_div_neigh <- cbind(hh_income_div_neigh, div_index_fxn(hh_income_div_neigh, "hh_income", "nbhd")[-1])
 
+
+race_div_neigh <- race_pull_raw %>%
+  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+  filter((!is.na(tract20_nbhd))| race_total_Total == 0) %>%
+  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+  as_tibble() %>%   
+  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+  group_by(tract20_nbhd) %>%
+  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
+
+# adding Boston row
+total <- c(tract20_nbhd="Citywide", apply(race_div_neigh[,-1], FUN = sum, MAR = 2))
+race_div_neigh <- rbind(race_div_neigh, total)
+
+race_div_neigh <- cbind(race_div_neigh, div_index_fxn(race_div_neigh, "race", "nbhd")[-1])
+
+
 ### CITY
 cities_of_int <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "cities")
 
 cities_raw <- get_acs(geography = "place", 
-                  variable = acs_pull_labels, #34, 
-                  output = "wide",
-                  year = 2020,
-                  cache_table = T,
-                  show_call = TRUE) 
+                      variable = acs_pull_labels, #34, 
+                      output = "wide",
+                      year = 2020,
+                      cache_table = T,
+                      show_call = TRUE) 
 
 ## Essentially, all the steps from earlier wil just be repeated here
 cities_small <- cities_raw %>%
@@ -350,7 +371,7 @@ colnames(cities_small)[3:length(colnames(cities_small))-1] <-
 
 # initializing the df 
 cities_groups <- tibble(GEOID = cities_small$GEOID, 
-                           NAME = cities_small$NAM) # I don't know why it's doing this but 
+                        NAME = cities_small$NAM) # I don't know why it's doing this but 
 
 for(i in 1:length(colnames(div_groups_labels))) {
   cities_groups <- cbind(cities_groups, grouping_fxn(colnames(div_groups_labels)[i], city = T))
@@ -368,10 +389,16 @@ age_pull_city_raw <- cities_groups %>%
 hh_income_pull_city_raw <- cities_groups %>% 
   select(c(GEOID, NAME, starts_with("hh_income")))
 
+race_pull_city_raw <- cities_groups %>% 
+  select(c(GEOID, NAME, starts_with("race")))
+
 pob_div_city <- cbind(pob_pull_city_raw, div_index_fxn(pob_pull_city_raw, "pob", geography = "city")[-1])
 educ_div_city <- cbind(educ_pull_city_raw, div_index_fxn(educ_pull_city_raw, "educ", geography = "city")[-1])
 age_div_city <- cbind(age_pull_city_raw, div_index_fxn(age_pull_city_raw, "age", geography = "city")[-1])
 hh_income_div_city <- cbind(hh_income_pull_city_raw, div_index_fxn(hh_income_pull_city_raw, "hh_income", geography = "city")[-1])
+race_div_city <- cbind(race_pull_city_raw, div_index_fxn(race_pull_city_raw, "race", geography = "city")[-1])
+
+
 
 
 
@@ -379,18 +406,49 @@ hh_income_div_city <- cbind(hh_income_pull_city_raw, div_index_fxn(hh_income_pul
 
 write_rds(pob_div_tract, "Place_of_Birth_diversity_tract.RDS")
 write_rds(pob_div_neigh, "Place_of_Birth_diversity_neighborhood.RDS")
-write_rds(pob_div_city, "Place_of_Birth_diversity_city.RDS")
+write_rds(pob_div_city, "Place_of_Birth_diversity_cities.RDS")
 
-write_rds(educ_div_tract, "Education_diversity_tract.RDS")
+write_rds(educ_div_tract, "Education_diversity_div_tract.RDS")
 write_rds(educ_div_neigh, "Education_diversity_neighborhood.RDS")
-write_rds(pob_div_city, "Education_diversity_city.RDS")
+write_rds(educ_div_city, "Education_diversity_cities.RDS")
 
 write_rds(age_div_tract, "Age_diversity_tract.RDS")
 write_rds(age_div_neigh, "Age_diversity_neighborhood.RDS")
-write_rds(pob_div_city, "Age_diversity_city.RDS")
+write_rds(age_div_city, "Age_diversity_cities.RDS")
 
 write_rds(hh_income_div_tract, "Household_Income_diversity_tract.RDS")
 write_rds(hh_income_div_neigh, "Household_Income_diversity_neighborhood.RDS")
-write_rds(pob_div_city, "Household_Income_diversity_city.RDS")
+write_rds(hh_income_div_city, "Household_Income_diversity_cities.RDS")
+
+write_rds(race_div_tract, "Race_diversity_tract.RDS")
+write_rds(race_div_neigh, "Race_diversity_neighborhood.RDS")
+write_rds(race_div_city, "Race_diversity_cities.RDS")
+
+
+
+# age_div_tract <- read_rds("data/Age_diversity_tract.RDS") #%>% 
+# mutate(current_data = val_gens)
+# age_div_neigh <- read_rds("data/Age_diversity_neighborhood.RDS")
+# age_div_cities <- read_rds("data/Age_diversity_cities.RDS")
+# 
+# educ_div_tract <- read_rds("data/Education_diversity_tract.RDS") %>% 
+#   mutate(current_data = val_higher_ed)
+# educ_div_neigh <- read_rds("data/Education_diversity_neighborhood.RDS")
+# educ_div_cities <- read_rds("data/Education_diversity_cities.RDS")
+# 
+# hh_income_div_tract <- read_rds("data/Household_Income_diversity_tract.RDS") %>% 
+#   mutate(current_data = val_median)
+# hh_income_div_neigh <- read_rds("data/Household_Income_diversity_neighborhood.RDS")
+# hh_income_div_cities <- read_rds("data/Household_Income_diversity_cities.RDS")
+# 
+# lang_div_tract <- read_rds("data/Language_diversity_tract.RDS") %>% 
+#   mutate(current_data = val_eng_not)
+# lang_div_neigh <- read_rds("data/Language_diversity_neighborhood.RDS")
+# lang_div_cities <- read_rds("data/Language_diversity_cities.RDS")
+# 
+# pob_div_tract <- read_rds("data/Place_of_Birth_diversity_tract.RDS") %>% 
+#   mutate(current_data = val_nat_for)
+# pob_div_neigh <- read_rds("data/Place_of_Birth_diversity_neighborhood.RDS")
+# pob_div_cities <- read_rds("data/Place_of_Birth_diversity_cities.RDS")
 
 
