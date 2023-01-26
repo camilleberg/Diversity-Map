@@ -3,13 +3,13 @@
 # Written by: Camille Bergeron
 # Written on: December 12, 2022
 
-## Last Modified: January 19, 2023
-  # added race variable
+# Last Modified: January 19, 2023
+# added race variable
 
 ## TO DO:
 # make more automated
-# soft code the length of the census_groups_expanded (?)
-# automate the nbhd code (?)
+# soft code the length of the census group expanded
+# automate the nbhd code
 
 
 ## SETUP ------------------------------------------------------------------
@@ -34,12 +34,15 @@ library(janitor)
 
 # note: you may need to run these libraries individually 
 
+# setting working directory
+proj_folder <- paste0("C:/Users/", Sys.info()[["user"]], "/Box/Research/Active Projects/Interactive Diversity Map/data_pulling")
+
 ## PULLING AND ORGANZIING THE DATA -----------------------------------------
 
 VARS <- tidycensus::load_variables(dataset = 'acs5', year = 2020, cache = T)
 
 # categories <- read_xlsx("Diversity Map Categories.xlsx")
-categories <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "categories")
+categories <- readxl::read_xlsx(paste0(proj_folder, "/div_map_categories.xlsx"), sheet = "categories")
 
 
 # creating unique variable names 
@@ -68,7 +71,7 @@ for(i in 1:nrow(categories)){
       # manually fixing the high school thing
       male <- "B15002_011"; female <- "B15002_028"
     } else {
-      # aggregating the male and female var names because they're segregated for educ and age
+      # aggregating the male and female var names because they're segregated for educ
       male <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][1]
       female <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)][2]
     }
@@ -77,6 +80,10 @@ for(i in 1:nrow(categories)){
     categories$census_label[i] <- paste0(male, ",", female)
     # NOTE: the comma here should match the comma later as a separator 
     
+  } else if(grepl("^Chinese", categories$var_name_ending[i])) {
+    categories$census_label[i] <- "C16001_021"
+  } else if(grepl("^Tagalog", categories$var_name_ending[i])) {
+    categories$census_label[i] <- "C16001_027"
   } else {
     # assigning new label 
     categories$census_label[i] <- table$name[grepl(paste0(categories$var_name_ending[i], "$"), table$label)]
@@ -198,6 +205,9 @@ hh_income_pull_raw <- other_var_groups %>%
 race_pull_raw <- other_var_groups %>% 
   select(c(GEOID, NAME, geometry, starts_with("race")))
 
+lang_pull_raw <- other_var_groups %>% 
+  select(c(GEOID, NAME, geometry, starts_with("lang")))
+
 # performing the calculations
 
 div_index_fxn <- function(dat, var_type, geography) {
@@ -256,6 +266,7 @@ educ_div_tract <- cbind(educ_pull_raw, div_index_fxn(educ_pull_raw, "educ", geog
 age_div_tract <- cbind(age_pull_raw, div_index_fxn(age_pull_raw, "age", geography = "tract")[-1])
 hh_income_div_tract <- cbind(hh_income_pull_raw, div_index_fxn(hh_income_pull_raw, "hh_income", geography = "tract")[-1])
 race_div_tract <- cbind(race_pull_raw, div_index_fxn(race_pull_raw, "race", geography = "tract")[-1])
+lang_div_tract <- cbind(race_pull_raw, div_index_fxn(race_pull_raw, "lang", geography = "tract")[-1])
 # this is to remove the total column
 
 ## NEIGHBORHOOD AND CITY ---------------------------------------------------
@@ -330,7 +341,7 @@ hh_income_div_neigh <- rbind(hh_income_div_neigh, total)
 
 hh_income_div_neigh <- cbind(hh_income_div_neigh, div_index_fxn(hh_income_div_neigh, "hh_income", "nbhd")[-1])
 
-
+## for race
 race_div_neigh <- race_pull_raw %>%
   left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
   filter((!is.na(tract20_nbhd))| race_total_Total == 0) %>%
@@ -345,6 +356,23 @@ total <- c(tract20_nbhd="Citywide", apply(race_div_neigh[,-1], FUN = sum, MAR = 
 race_div_neigh <- rbind(race_div_neigh, total)
 
 race_div_neigh <- cbind(race_div_neigh, div_index_fxn(race_div_neigh, "race", "nbhd")[-1])
+
+
+## for language 
+lang_div_neigh <- lang_pull_raw %>%
+  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+  filter((!is.na(tract20_nbhd))| lang_total_Total == 0) %>%
+  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+  as_tibble() %>%   
+  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+  group_by(tract20_nbhd) %>%
+  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
+
+# adding Boston row
+total <- c(tract20_nbhd="Citywide", apply(lang_div_neigh[,-1], FUN = sum, MAR = 2))
+lang_div_neigh <- rbind(lang_div_neigh, total)
+
+lang_div_neigh <- cbind(lang_div_neigh, div_index_fxn(lang_div_neigh, "lang", "nbhd")[-1])
 
 
 ### CITY
@@ -392,11 +420,15 @@ hh_income_pull_city_raw <- cities_groups %>%
 race_pull_city_raw <- cities_groups %>% 
   select(c(GEOID, NAME, starts_with("race")))
 
+lang_pull_city_raw <- cities_groups %>% 
+  select(c(GEOID, NAME, starts_with("lang")))
+
 pob_div_city <- cbind(pob_pull_city_raw, div_index_fxn(pob_pull_city_raw, "pob", geography = "city")[-1])
 educ_div_city <- cbind(educ_pull_city_raw, div_index_fxn(educ_pull_city_raw, "educ", geography = "city")[-1])
 age_div_city <- cbind(age_pull_city_raw, div_index_fxn(age_pull_city_raw, "age", geography = "city")[-1])
 hh_income_div_city <- cbind(hh_income_pull_city_raw, div_index_fxn(hh_income_pull_city_raw, "hh_income", geography = "city")[-1])
 race_div_city <- cbind(race_pull_city_raw, div_index_fxn(race_pull_city_raw, "race", geography = "city")[-1])
+lang_div_city <- cbind(lang_pull_city_raw, div_index_fxn(lang_pull_city_raw, "lang", geography = "city")[-1])
 
 
 
