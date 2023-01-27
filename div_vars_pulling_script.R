@@ -440,7 +440,7 @@ write_rds(pob_div_tract, "Place_of_Birth_diversity_tract.RDS")
 write_rds(pob_div_neigh, "Place_of_Birth_diversity_neighborhood.RDS")
 write_rds(pob_div_city, "Place_of_Birth_diversity_cities.RDS")
 
-write_rds(educ_div_tract, "Education_diversity_div_tract.RDS")
+write_rds(educ_div_tract, "Education_diversity_tract.RDS")
 write_rds(educ_div_neigh, "Education_diversity_neighborhood.RDS")
 write_rds(educ_div_city, "Education_diversity_cities.RDS")
 
