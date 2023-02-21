@@ -34,9 +34,11 @@ library(dplyr)
 library(janitor)
 
 # note: you may need to run these libraries individually 
+
+# API check
 Sys.getenv("CENSUS_API_KEY")
 key <- "9ae2a318c9319b6b4c964d5a6b4bb714abf02f2e"
-census_api_key(key, overwrite = TRUE, install = TRUE)
+# census_api_key(key, overwrite = TRUE, install = TRUE)
 
 # setting working directory
 proj_folder <- paste0("C:/Users/", Sys.info()[["user"]], "/Box/Research/Active Projects/Interactive Diversity Map/data_pulling")
@@ -132,7 +134,7 @@ colnames(other_var_small)[3:length(colnames(other_var_small))-1] <-
 
 # initializing labeling conventio
 col_var_names <- c()
-for(i in 1:24) {
+for(i in 1:60) {
   col_var_names[i] <- paste0("var.", i)
 }
 # 24 was chosen through looking at the data, but there's probably a way to soft-code it
@@ -270,7 +272,7 @@ educ_div_tract <- cbind(educ_pull_raw, div_index_fxn(educ_pull_raw, "educ", geog
 age_div_tract <- cbind(age_pull_raw, div_index_fxn(age_pull_raw, "age", geography = "tract")[-1])
 hh_income_div_tract <- cbind(hh_income_pull_raw, div_index_fxn(hh_income_pull_raw, "hh_income", geography = "tract")[-1])
 race_div_tract <- cbind(race_pull_raw, div_index_fxn(race_pull_raw, "race", geography = "tract")[-1])
-lang_div_tract <- cbind(race_pull_raw, div_index_fxn(race_pull_raw, "lang", geography = "tract")[-1])
+lang_div_tract <- cbind(lang_pull_raw, div_index_fxn(lang_pull_raw, "lang", geography = "tract")[-1])
 # this is to remove the total column
 
 ## NEIGHBORHOOD AND CITY ---------------------------------------------------
