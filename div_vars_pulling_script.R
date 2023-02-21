@@ -15,6 +15,7 @@
 ## SETUP ------------------------------------------------------------------
 rm(list = ls())
 
+library(tidycensus)
 # loading libraries
 remotes::install_github("walkerke/tidycensus")
 devtools::install_github("r-spatial/leafpop")
@@ -33,6 +34,9 @@ library(dplyr)
 library(janitor)
 
 # note: you may need to run these libraries individually 
+Sys.getenv("CENSUS_API_KEY")
+key <- "9ae2a318c9319b6b4c964d5a6b4bb714abf02f2e"
+census_api_key(key, overwrite = TRUE, install = TRUE)
 
 # setting working directory
 proj_folder <- paste0("C:/Users/", Sys.info()[["user"]], "/Box/Research/Active Projects/Interactive Diversity Map/data_pulling")
@@ -108,7 +112,7 @@ other_var_pull_raw <- tidycensus::get_acs(geography = "tract",
                                           state = "MA",
                                           county = "Suffolk",
                                           geometry = TRUE,
-                                          year = 2020,
+                                          year = 2021,
                                           cache_table = T,
                                           show_call = TRUE) %>% 
   filter(!(str_detect(NAME,"Census Tract 99")|str_detect(NAME,"Census Tract 18")
@@ -381,7 +385,7 @@ cities_of_int <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "cities")
 cities_raw <- get_acs(geography = "place", 
                       variable = acs_pull_labels, #34, 
                       output = "wide",
-                      year = 2020,
+                      year = 2021,
                       cache_table = T,
                       show_call = TRUE) 
 
@@ -456,6 +460,9 @@ write_rds(race_div_tract, "Race_diversity_tract.RDS")
 write_rds(race_div_neigh, "Race_diversity_neighborhood.RDS")
 write_rds(race_div_city, "Race_diversity_cities.RDS")
 
+write_rds(lang_div_tract, "Language_diversity_tract.RDS")
+write_rds(lang_div_neigh, "Language_diversity_neighborhood.RDS")
+write_rds(lang_div_city, "Language_diversity_cities.RDS")
 
 
 # age_div_tract <- read_rds("data/Age_diversity_tract.RDS") #%>% 
