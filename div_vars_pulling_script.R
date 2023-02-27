@@ -194,25 +194,22 @@ div_prop <- function(var, total_pop) {
 }
 
 # separating the df into the general demographic variables
-# NOTE: this part will be hard coded
 
-educ_pull_raw <- other_var_groups %>% 
-  select(c(GEOID, NAME, geometry, starts_with("educ")))
+# new function to split based on variables / titles 
+var_split_fxn <- function(name) {
+  pull_raw <-  other_var_groups %>% 
+    select(c(GEOID, NAME, geometry, starts_with(name)))
+  
+  # saving to the global environment
+  assign(paste0(name, "_pull_raw"), pull_raw, envir = .GlobalEnv)
+}
 
-pob_pull_raw <- other_var_groups %>% 
-  select(c(GEOID, NAME, geometry, starts_with("pob")))
+# looping through all unique variables to split the data
+all_titles <- unique(categories$title)
 
-age_pull_raw <- other_var_groups %>% 
-  select(c(GEOID, NAME, geometry, starts_with("age")))
-
-hh_income_pull_raw <- other_var_groups %>% 
-  select(c(GEOID, NAME, geometry, starts_with("hh_income")))
-
-race_pull_raw <- other_var_groups %>% 
-  select(c(GEOID, NAME, geometry, starts_with("race")))
-
-lang_pull_raw <- other_var_groups %>% 
-  select(c(GEOID, NAME, geometry, starts_with("lang")))
+for(i in 1:length(all_titles)){
+  var_split_fxn(all_titles[i])
+}
 
 # performing the calculations
 
