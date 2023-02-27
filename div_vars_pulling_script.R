@@ -267,118 +267,46 @@ div_index_fxn <- function(dat, var_type, geography) {
 }
 
 # adding diversity index calculations to larger variable data frames
-pob_div_tract <- cbind(pob_pull_raw, div_index_fxn(pob_pull_raw, "pob", geography = "tract")[-1])
-educ_div_tract <- cbind(educ_pull_raw, div_index_fxn(educ_pull_raw, "educ", geography = "tract")[-1])
-age_div_tract <- cbind(age_pull_raw, div_index_fxn(age_pull_raw, "age", geography = "tract")[-1])
-hh_income_div_tract <- cbind(hh_income_pull_raw, div_index_fxn(hh_income_pull_raw, "hh_income", geography = "tract")[-1])
-race_div_tract <- cbind(race_pull_raw, div_index_fxn(race_pull_raw, "race", geography = "tract")[-1])
-lang_div_tract <- cbind(lang_pull_raw, div_index_fxn(lang_pull_raw, "lang", geography = "tract")[-1])
-# this is to remove the total column
+
+# writing out function 
+tract_calc_fxn <- function(pull_raw) {
+  var <- strsplit(deparse(substitute(pull_raw)), "_")[[1]][1]
+  
+  # calculating the 
+  div_tract <- cbind(pull_raw, div_index_fxn(pull_raw, var, geography = "tract")[-1])
+  
+  write_rds(div_tract, paste0(var, "_diversity_tract.RDS"))
+}
 
 ## NEIGHBORHOOD AND CITY ---------------------------------------------------
 
 ### NEIGHBORHOOD
 TRACT_TO_NEIGHBORHOOD <- readxl::read_xlsx("geo20_tract_block group comparison.xlsx")
 
-## for place of birth
-pob_div_neigh <- pob_pull_raw %>%
-  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
-  filter((!is.na(tract20_nbhd))| pob_total_Total == 0) %>%
-  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
-  as_tibble() %>%   
-  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
-  group_by(tract20_nbhd) %>%
-  summarise(across(everything(), ~ sum(., is.na(.), 0))) 
 
-# adding Boston row
-total <- c(tract20_nbhd="Citywide", apply(pob_div_neigh[,-1], FUN = sum, MAR = 2))
-pob_div_neigh <- rbind(pob_div_neigh, total)
-
-pob_div_neigh <- cbind(pob_div_neigh, div_index_fxn(pob_div_neigh, "pob", "nbhd")[-1])
-
-
-## for education
-educ_div_neigh <- educ_pull_raw %>%
-  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
-  filter((!is.na(tract20_nbhd))| educ_total_Total == 0) %>%
-  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
-  as_tibble() %>%   
-  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
-  group_by(tract20_nbhd) %>%
-  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
-
-# adding Boston row
-total <- c(tract20_nbhd="Citywide", apply(educ_div_neigh[,-1], FUN = sum, MAR = 2))
-educ_div_neigh <- rbind(educ_div_neigh, total)
-
-educ_div_neigh <- cbind(educ_div_neigh, div_index_fxn(educ_div_neigh, "educ", "nbhd")[-1])
-
-
-## for age
-age_div_neigh <- age_pull_raw %>%
-  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
-  filter((!is.na(tract20_nbhd))| age_total_Total == 0) %>%
-  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
-  as_tibble() %>%   
-  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
-  group_by(tract20_nbhd) %>%
-  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
-
-# adding Boston row
-total <- c(tract20_nbhd="Citywide", apply(age_div_neigh[,-1], FUN = sum, MAR = 2))
-age_div_neigh <- rbind(age_div_neigh, total)
-
-age_div_neigh <- cbind(age_div_neigh, div_index_fxn(age_div_neigh, "age", "nbhd")[-1])
-
-
-## for household income
-hh_income_div_neigh <- hh_income_pull_raw %>%
-  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
-  filter((!is.na(tract20_nbhd))| hh_income_total_Total == 0) %>%
-  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
-  as_tibble() %>%   
-  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
-  group_by(tract20_nbhd) %>%
-  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
-
-# adding Boston row
-total <- c(tract20_nbhd="Citywide", apply(hh_income_div_neigh[,-1], FUN = sum, MAR = 2))
-hh_income_div_neigh <- rbind(hh_income_div_neigh, total)
-
-hh_income_div_neigh <- cbind(hh_income_div_neigh, div_index_fxn(hh_income_div_neigh, "hh_income", "nbhd")[-1])
-
-## for race
-race_div_neigh <- race_pull_raw %>%
-  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
-  filter((!is.na(tract20_nbhd))| race_total_Total == 0) %>%
-  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
-  as_tibble() %>%   
-  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
-  group_by(tract20_nbhd) %>%
-  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
-
-# adding Boston row
-total <- c(tract20_nbhd="Citywide", apply(race_div_neigh[,-1], FUN = sum, MAR = 2))
-race_div_neigh <- rbind(race_div_neigh, total)
-
-race_div_neigh <- cbind(race_div_neigh, div_index_fxn(race_div_neigh, "race", "nbhd")[-1])
-
-
-## for language 
-lang_div_neigh <- lang_pull_raw %>%
-  left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
-  filter((!is.na(tract20_nbhd))| lang_total_Total == 0) %>%
-  filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
-  as_tibble() %>%   
-  select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
-  group_by(tract20_nbhd) %>%
-  summarise(across(everything(), ~ sum(., is.na(.), 0)))  
-
-# adding Boston row
-total <- c(tract20_nbhd="Citywide", apply(lang_div_neigh[,-1], FUN = sum, MAR = 2))
-lang_div_neigh <- rbind(lang_div_neigh, total)
-
-lang_div_neigh <- cbind(lang_div_neigh, div_index_fxn(lang_div_neigh, "lang", "nbhd")[-1])
+# function for nbhds
+nbhd_calc_fxn <- function(pull_raw) {
+  var <- strsplit(deparse(substitute(pull_raw)), "_")[[1]][1]
+  
+  #aggregating tracts to nbhds
+  div_neigh <- pull_raw %>%
+    left_join(TRACT_TO_NEIGHBORHOOD, by = c('NAME'='tract20')) %>% 
+    filter((!is.na(tract20_nbhd))| paste0(var, "_total_Total") == 0) %>%
+    filter(tract20_nbhd != "_Census Tract 9901.01, Suffolk County, Massachusetts") %>% 
+    as_tibble() %>%   
+    select(-c(GEOID, NAME, geometry, GEO_ID, GEO_ID2)) %>%
+    group_by(tract20_nbhd) %>%
+    summarise(across(everything(), ~ sum(., is.na(.), 0))) 
+  
+  # adding Boston row
+  total <- c(tract20_nbhd="Citywide", apply(div_neigh[,-1], FUN = sum, MAR = 2))
+  div_neigh <- rbind(div_neigh, total)
+  
+  # calculating div values 
+  div_neigh <- cbind(div_neigh, div_index_fxn(div_neigh, var, "nbhd")[-1])
+  
+  write_rds(div_neigh, paste0(var, "_diversity_neighborhood.RDS"))
+}
 
 
 ### CITY
@@ -411,60 +339,42 @@ for(i in 1:length(colnames(div_groups_labels))) {
   cities_groups <- cbind(cities_groups, grouping_fxn(colnames(div_groups_labels)[i], city = T))
 }
 
-educ_pull_city_raw <- cities_groups %>% 
-  select(c(GEOID, NAME, starts_with("educ")))
-
-pob_pull_city_raw <- cities_groups %>% 
-  select(c(GEOID, NAME, starts_with("pob")))
-
-age_pull_city_raw <- cities_groups %>% 
-  select(c(GEOID, NAME, starts_with("age")))
-
-hh_income_pull_city_raw <- cities_groups %>% 
-  select(c(GEOID, NAME, starts_with("hh_income")))
-
-race_pull_city_raw <- cities_groups %>% 
-  select(c(GEOID, NAME, starts_with("race")))
-
-lang_pull_city_raw <- cities_groups %>% 
-  select(c(GEOID, NAME, starts_with("lang")))
-
-pob_div_city <- cbind(pob_pull_city_raw, div_index_fxn(pob_pull_city_raw, "pob", geography = "city")[-1])
-educ_div_city <- cbind(educ_pull_city_raw, div_index_fxn(educ_pull_city_raw, "educ", geography = "city")[-1])
-age_div_city <- cbind(age_pull_city_raw, div_index_fxn(age_pull_city_raw, "age", geography = "city")[-1])
-hh_income_div_city <- cbind(hh_income_pull_city_raw, div_index_fxn(hh_income_pull_city_raw, "hh_income", geography = "city")[-1])
-race_div_city <- cbind(race_pull_city_raw, div_index_fxn(race_pull_city_raw, "race", geography = "city")[-1])
-lang_div_city <- cbind(lang_pull_city_raw, div_index_fxn(lang_pull_city_raw, "lang", geography = "city")[-1])
-
-
-
+# city calculation function
+city_calc_fxn <- function(pull_raw) {
+  var <- strsplit(deparse(substitute(pull_raw)), "_")[[1]][1]
+  
+  # selecting the proper data
+  pull_city_raw <- cities_groups %>% 
+    select(c(GEOID, NAME, starts_with(var)))
+  
+  # calculating the index and combining
+  div_city <- cbind(pull_city_raw, div_index_fxn(pull_city_raw, var, geography = "city")[-1])
+  
+  write_rds(div_city, paste0(var, "_diversity_cities.RDS"))
+}
 
 
 ## WRITING OUT THE DATA ----------------------------------------------------
 
-write_rds(pob_div_tract, "Place_of_Birth_diversity_tract.RDS")
-write_rds(pob_div_neigh, "Place_of_Birth_diversity_neighborhood.RDS")
-write_rds(pob_div_city, "Place_of_Birth_diversity_cities.RDS")
+tract_calc_fxn(race_pull_raw)
+nbhd_calc_fxn(race_pull_raw)
+city_calc_fxn(race_pull_raw)
 
-write_rds(educ_div_tract, "Education_diversity_tract.RDS")
-write_rds(educ_div_neigh, "Education_diversity_neighborhood.RDS")
-write_rds(educ_div_city, "Education_diversity_cities.RDS")
+tract_calc_fxn(educ_pull_raw)
+nbhd_calc_fxn(educ_pull_raw)
+city_calc_fxn(educ_pull_raw)
 
-write_rds(age_div_tract, "Age_diversity_tract.RDS")
-write_rds(age_div_neigh, "Age_diversity_neighborhood.RDS")
-write_rds(age_div_city, "Age_diversity_cities.RDS")
+tract_calc_fxn(lang_pull_raw)
+nbhd_calc_fxn(lang_pull_raw)
+city_calc_fxn(lang_pull_raw)
 
-write_rds(hh_income_div_tract, "Household_Income_diversity_tract.RDS")
-write_rds(hh_income_div_neigh, "Household_Income_diversity_neighborhood.RDS")
-write_rds(hh_income_div_city, "Household_Income_diversity_cities.RDS")
+tract_calc_fxn(age_pull_raw)
+nbhd_calc_fxn(age_pull_raw)
+city_calc_fxn(age_pull_raw)
 
-write_rds(race_div_tract, "Race_diversity_tract.RDS")
-write_rds(race_div_neigh, "Race_diversity_neighborhood.RDS")
-write_rds(race_div_city, "Race_diversity_cities.RDS")
-
-write_rds(lang_div_tract, "Language_diversity_tract.RDS")
-write_rds(lang_div_neigh, "Language_diversity_neighborhood.RDS")
-write_rds(lang_div_city, "Language_diversity_cities.RDS")
+tract_calc_fxn(hh_income_pull_raw)
+nbhd_calc_fxn(hh_income_pull_raw)
+city_calc_fxn(hh_income_pull_raw)
 
 
 # age_div_tract <- read_rds("data/Age_diversity_tract.RDS") #%>% 
@@ -492,4 +402,8 @@ write_rds(lang_div_city, "Language_diversity_cities.RDS")
 # pob_div_neigh <- read_rds("data/Place_of_Birth_diversity_neighborhood.RDS")
 # pob_div_cities <- read_rds("data/Place_of_Birth_diversity_cities.RDS")
 
+## DEBUG SCRIPT/ QUALITY CONTROL EXAMPLE ------------------------------------------
 
+race_diversity_city[1, ] %>%
+  select(starts_with("race_hispanic")) %>%
+  unlist %>% as.numeric() %>% sum()
