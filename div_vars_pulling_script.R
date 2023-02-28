@@ -134,7 +134,7 @@ colnames(other_var_small)[3:length(colnames(other_var_small))-1] <-
 
 # initializing labeling conventio
 col_var_names <- c()
-for(i in 1:60) {
+for(i in 1:80) {
   col_var_names[i] <- paste0("var.", i)
 }
 # 24 was chosen through looking at the data, but there's probably a way to soft-code it
@@ -373,6 +373,10 @@ tract_calc_fxn(hh_income_pull_raw)
 nbhd_calc_fxn(hh_income_pull_raw)
 city_calc_fxn(hh_income_pull_raw)
 
+tract_calc_fxn(pob_pull_raw)
+nbhd_calc_fxn(pob_pull_raw)
+city_calc_fxn(pob_pull_raw)
+
 
 # age_div_tract <- read_rds("data/Age_diversity_tract.RDS") #%>% 
 # mutate(current_data = val_gens)
@@ -401,6 +405,16 @@ city_calc_fxn(hh_income_pull_raw)
 
 ## DEBUG SCRIPT/ QUALITY CONTROL EXAMPLE ------------------------------------------
 
-race_diversity_city[1, ] %>%
-  select(starts_with("race_hispanic")) %>%
-  unlist %>% as.numeric() %>% sum()
+pob_diversity_neighborhood[1, ] %>%
+  select(starts_with("pob_US_top10")) %>%
+  unlist %>% as.numeric() %>% sum() 
+
+## this should equal 0 
+pob_diversity_neighborhood %>%
+  select(starts_with("pob_top10_")) %>%
+  unlist %>% as.numeric() %>% sum() -( pob_diversity_neighborhood$pob_total_Total %>%
+  as.numeric() %>% sum())
+
+pob_diversity_cities[12, ] %>%
+  select(starts_with("pob_top10_")) %>%
+  unlist %>% as.numeric() %>% sum() 
