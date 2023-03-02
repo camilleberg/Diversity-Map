@@ -37,8 +37,6 @@ library(janitor)
 
 # API check
 Sys.getenv("CENSUS_API_KEY")
-key <- "9ae2a318c9319b6b4c964d5a6b4bb714abf02f2e"
-# census_api_key(key, overwrite = TRUE, install = TRUE)
 
 # setting working directory
 proj_folder <- paste0("C:/Users/", Sys.info()[["user"]], "/Box/Research/Active Projects/Interactive Diversity Map/data_pulling")
@@ -46,10 +44,7 @@ proj_folder <- paste0("C:/Users/", Sys.info()[["user"]], "/Box/Research/Active P
 ## PULLING AND ORGANZIING THE DATA -----------------------------------------
 
 VARS <- tidycensus::load_variables(dataset = 'acs5', year = 2020, cache = T)
-
-# categories <- read_xlsx("Diversity Map Categories.xlsx")
 categories <- readxl::read_xlsx(paste0(proj_folder, "/div_map_categories.xlsx"), sheet = "categories")
-
 
 # creating unique variable names 
 categories$var_names <- paste0(categories$title, "_", categories$group_name, "_",
@@ -105,7 +100,6 @@ census_groups <- categories %>%
 # un-listing variable names 
 acs_pull_labels <- unlist(strsplit(unique(categories$census_label), ",")) 
 acs_pull_labels <- acs_pull_labels[!acs_pull_labels == "NA"]
-# fix NA issue later (this is related to the High School thing)
 
 # pulling census data
 other_var_pull_raw <- tidycensus::get_acs(geography = "tract", 
@@ -269,7 +263,7 @@ div_index_fxn <- function(dat, var_type, geography) {
 tract_calc_fxn <- function(pull_raw) {
   var <- strsplit(deparse(substitute(pull_raw)), "_")[[1]][1]
   
-  # calculating the 
+  # adding div values
   div_tract <- cbind(pull_raw, div_index_fxn(pull_raw, var, geography = "tract")[-1])
   
   write_rds(div_tract, paste0(var, "_diversity_tract.RDS"))
@@ -377,6 +371,7 @@ tract_calc_fxn(pob_pull_raw)
 nbhd_calc_fxn(pob_pull_raw)
 city_calc_fxn(pob_pull_raw)
 
+## READING IN THE DATA ----------------------------------------------------
 
 # age_div_tract <- read_rds("data/Age_diversity_tract.RDS") #%>% 
 # mutate(current_data = val_gens)
