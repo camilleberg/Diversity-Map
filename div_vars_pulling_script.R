@@ -363,9 +363,9 @@ tract_calc_fxn(age_pull_raw)
 nbhd_calc_fxn(age_pull_raw)
 city_calc_fxn(age_pull_raw)
 
-tract_calc_fxn(hh_income_pull_raw)
-nbhd_calc_fxn(hh_income_pull_raw)
-city_calc_fxn(hh_income_pull_raw)
+tract_calc_fxn(hh_pull_raw)
+nbhd_calc_fxn(hh_pull_raw)
+city_calc_fxn(hh_pull_raw)
 
 tract_calc_fxn(pob_pull_raw)
 nbhd_calc_fxn(pob_pull_raw)
@@ -412,4 +412,8 @@ pob_diversity_neighborhood %>%
 
 pob_diversity_cities[12, ] %>%
   select(starts_with("pob_top10_")) %>%
+  unlist %>% as.numeric() %>% sum() 
+
+hh_diversity_neighborhood[1, ] %>%
+  select(starts_with("hh_median")) %>%
   unlist %>% as.numeric() %>% sum() 
