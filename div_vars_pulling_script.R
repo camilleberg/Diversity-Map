@@ -266,7 +266,7 @@ tract_calc_fxn <- function(pull_raw) {
   # adding div values
   div_tract <- cbind(pull_raw, div_index_fxn(pull_raw, var, geography = "tract")[-1])
   
-  write_rds(div_tract, paste0(var, "_diversity_tract.RDS"))
+  write_rds(div_tract, paste0("output/", var, "_diversity_tract.RDS"))
 }
 
 ## NEIGHBORHOOD AND CITY ---------------------------------------------------
@@ -296,7 +296,7 @@ nbhd_calc_fxn <- function(pull_raw) {
   # calculating div values 
   div_neigh <- cbind(div_neigh, div_index_fxn(div_neigh, var, "nbhd")[-1])
   
-  write_rds(div_neigh, paste0(var, "_diversity_neighborhood.RDS"))
+  write_rds(div_neigh, paste0("output/", var, "_diversity_neighborhood.RDS"))
 }
 
 
@@ -341,7 +341,7 @@ city_calc_fxn <- function(pull_raw) {
   # calculating the index and combining
   div_city <- cbind(pull_city_raw, div_index_fxn(pull_city_raw, var, geography = "city")[-1])
   
-  write_rds(div_city, paste0(var, "_diversity_cities.RDS"))
+  write_rds(div_city, paste0("output/", var, "_diversity_cities.RDS"))
 }
 
 

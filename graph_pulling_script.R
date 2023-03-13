@@ -15,9 +15,11 @@ library(stringr)
 library(dplyr)
 library(htmlwidgets)
 
-# reading in all the data
+# reading in all the data from the output folder 
+setwd("./output")
 all_tract_data <- list.files(pattern = "tract.RDS") %>%
   map(readRDS) 
+setwd("..")
 
 # separating out the div values 
 for(i in 1:length(all_tract_data)) {
@@ -72,7 +74,7 @@ plot_html_fxn <- function(tract_df, input) {
     return(fl) 
   }
   )
-  write_rds(p_all_plotly_html, paste0("graph_files/graph_", selected_val,  ".RDS"))
+  write_rds(p_all_plotly_html, paste0("graph_files/graph_", selected_val, ".RDS"))
 }
 
 
