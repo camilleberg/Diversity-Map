@@ -1,7 +1,7 @@
 # original map function 
 
 input <- "val_pob_us_regions"
-tract_df <- pob_diversity_tract
+tract_df <- pob_values
 scale_bool <- T
 
 
