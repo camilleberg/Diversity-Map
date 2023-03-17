@@ -1,0 +1,384 @@
+label,html_text
+about,"<h1><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#0fa6b4""><strong>About the Interactive Diversity Map</strong></span></span></h1>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">In this tool, we use the </span></span><a href=""https://www.usatoday.com/pages/interactives/div100-map/"" style=""text-decoration:none""><span style=""color:#0fa6b4""><span style=""font-size:11pt""><u>USA Today Diversity Index</u></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt""> developed by </span></span><a href=""https://academic.oup.com/ijpor/article-abstract/4/1/51/684115?redirectedFrom=fulltext"" style=""text-decoration:none""><span style=""color:#0fa6b4""><span style=""font-size:11pt""><u>Meyer and McIntosh (1999)</u></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt"">. This is a probability-based index to assess the amount of difference in a population along one particular dimension. The index has a range from 0 to 1 representing the probability that two people chosen at random from the population will differ along a chosen dimension. A value of zero would apply to a population in which everyone was the same. A value of one would apply to a population in which each person was different from every other person in that dimension.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">While the original index was created to measure ethnic diversity, diversity can come in many forms. This tool shows diversity in Boston as measured by&nbsp; Place of Birth, Language Spoken at Home, Age, Household Income, and Educational Attainment in addition to Race and Ethnicity.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">For example, consider a measurement of diversity based on graduation from high school or not. In this case, a maximally diverse population would consist of exactly half high school graduates and half non-high school graduates. The probability of two people chosen at random from the population being different along the high school graduation dimension would be 50 percent and therefore the diversity index would by 0.50. A less diverse population would consist of 70 high school graduates for every 30 non-high school graduates. In this case, the probability of two people chosen at random being different along the high school graduation dimension would be 42 percent and the diversity index would by 0.42<sup>1</sup>. A population in which the proportions were switched (30 high school graduates for every 70 non-high school graduates) would have the same diversity index score of 0.42 because the probability of two randomly chosen people being different along this same dimension would still be 42 percent</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">However, the diversity of a given population depends heavily on how diversity is defined. Going back to our earlier example of using educational attainment, suppose we want to measure not only high school graduates and non-high school graduates but also those who may have gone on to continue their education. Now using three categories (non-high school graduates, highschool graduates with less than a Bachelor&rsquo;s degree, and those with a Bachelor&rsquo;s degree or higher) as a measure of diversity, a maximally diverse population would include an equal number of individuals within each category, i.e. 33 people with no high school diploma, 33 with a high school diploma or equivalent, and 34 with a bachelor&rsquo;s or higher with a resulting diversity index of approximately 0.67.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">Previously, a population of 50 non high school graduates and 50 high school graduates can be&nbsp; considered to be more diverse than the population of 30 non high school graduates and 70 high school graduates. Suppose that of the high school graduates, exactly half of each population went on to obtain a bachelor&rsquo;s degree or more advanced degree. If we then recalculate the diversity index with the three-category definition, the second population (30 non-high school graduates; 35 high school graduates without a Bachelor&rsquo;s degree; and 35 with a Bachelor&rsquo;s degree or higher, with a score of 0.665) is now more diverse than the first population (50 non-high school graduates; 25 high school graduates without a Bachelor&rsquo;s degree; and 25 with a Bachelor&rsquo;s degree or higher, with a score of 0.625) since it more closely resembles what has been determined as maximally diverse by having a more equal distribution among the defined categories.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">The U.S. Census provides an explanation using different groupings and categorical formations using specifically race and ethnicity for a more thorough walk-through, which can be found </span></span><a href=""https://www.census.gov/newsroom/blogs/random-samplings/2021/08/measuring-racial-ethnic-diversity-2020-census.html#:~:text=these%20standard%20categories.-,Diversity%20Index,-One%20of%20the"" style=""text-decoration:none""><span style=""color:#0fa6b4""><span style=""font-size:11pt""><u>here</u></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt"">.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">For each demographic subject highlighted in this tool (Race &amp; Ethnicity, Region of Birth, Language Spoken at Home, Age, Household Income, and Educational Attainment), we provide various groupings and categorisations to use as a definition of diversity rather than supplying a single predetermined measure. Different groupings may be more or less relevant depending on the particular context.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt"">We also provide different modes of comparisons. Within each tab there&rsquo;s the option to compare visually with a map across census tracts in Boston, to compare across Boston&rsquo;s neighborhoods and in relation to the City, and to compare Boston to a selection of comparable cities in the United States.&nbsp;</span></span></span></p>
+
+<hr />
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt""><sup>1</sup>The equation used to calculate the index&nbsp; is:&nbsp;</span></span></span></p>
+
+<p style=""text-align:center""><span style=""font-family:Arial,Helvetica,sans-serif""><em><span style=""color:#003d50""><span style=""font-size:10pt"">Index Value = 1-&sum;p<sub>i</sub><sup>2</sup></span></span></em></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt"">Where <em>p<sub>i</sub></em> is the proportion of each chosen category of the total population and <em>i&nbsp;</em>is the number of dimensions within a given category. E.g. If a population has 30 individuals who did not finish high school and 70 individuals who obtained a high school diploma or higher, then the resulting index score would be calculated as follows:</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p style=""text-align:center""><em><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt"">Index Value = 1 -( (did not obtain high school diploma or equivalency /total pop)<sup>2</sup>&nbsp;&nbsp;</span></span></span></em></p>
+
+<p style=""text-align:center""><em><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt"">+(high school diploma or higher/total pop)<sup>2</sup>)</span></span></span></em></p>
+
+<p style=""text-align:center""><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt"">= 1 - ((30/100)^2 + (70/100)^2)</span></span></span></p>
+
+<p style=""text-align:center""><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt"">= 1- (0.09 + 0.49)</span></span></span></p>
+
+<p style=""text-align:center""><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:10pt"">= 0.42</span></span></span></p>
+
+<hr />
+<p><span style=""font-family:Arial,Helvetica,sans-serif""><span style=""color:#003d50""><span style=""font-size:11pt""><strong>Source</strong>: 2017-2021 5 year American Community Survey, BPDA Research Division Analysis</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+"
+race,"<h1><span style=""color:#0fa6b4""><strong>Race &amp; Ethnicity</strong></span></h1>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Data is collected for all persons on their race and ethnicity.&nbsp;</span></span></span></p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The available options for race are:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Black or African American</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Asian</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Native Hawaiian and Other Pacific Islander</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Some other race</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Two or more races</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The available options for ethnicity are:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic or Latino</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Not Hispanic or Latino.</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The available options for two or more races are:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White &amp; Black or African American</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White &amp; American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White &amp; Asian</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Black or African American &amp; American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">All other two race combinations</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Population of three races</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Population of four or more races</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The options to categorize diversity for race and ethnicity in this tool are </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>Race and Ethnicity (Hispanic as a separate category), Race with Hispanic Ethnicity Distinction,</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""> and </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>Race with Detailed Multiracial Categories.</em></span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Race and Ethnicity (Hispanic as a separate category)</em></strong><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span>uses the following categories:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic White</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-HIspanic Black or African American</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic American Indian and Alaska Native&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic Asian and Pacific Islnader</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic Other Race</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic two or more races</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic or Latino</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">This option follows the common five-category ethnoracial classification with multiracial individuals and individuals classified as some other race&nbsp; having their own categories.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Race with Hispanic Ethnicity Distinction</em></strong><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span>uses the following categories:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic White</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic Black or African American</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic Asian and Pacific Islander</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic Other Race</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Non-Hispanic two or more races</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic White</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic Black</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic Asian or Pacific Islander</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic Other Race</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Hispanic two or more races</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">This option preserves the common racial classification but distributes Hispanic ethnicity among the available races. Including racial classifications within the Hispanic ethnicity places emphasis on the intersectionality between race and ethnicity.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Race with Detailed Multiracial Categories&nbsp;</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">uses the following categories:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Black or African American&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Asian or Pacific Islander</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Some other single race</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White &amp; Black or African American</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White &amp; American Indian and Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">White &amp; Asian&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Black or African American &amp; American Indian or Alaska Native</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Other Multiracial</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">This option focuses on the differences and diversity within the multiracial census category. As a note, data for multiracial persons does not include an ethnicity dimension, so Hispanic or Latino persons are distributed along their racial identities. </span></span></span></p>
+
+<p>&nbsp;</p>
+"
+lang,"<h2><span style=""color:#0fa6b4""><strong><span style=""font-size:16pt""><span style=""font-family:Arial"">Language Spoken at Home</span></span></strong></span></h2>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Data is collected for persons aged 5 years and older on the primary spoken language at home. The available options are:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Speak only English</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Spanish</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">French, Haitian, or Cajun</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">German or other West Germanic languages</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Russian, Polish, or other Slavic languages</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Other Indo-European languages</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Korean</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Chinese (incl. Mandarin, Cantonese)</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Vietnamese</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Tagalog (incl. Filipino)</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Other Asian and Pacific Island languages</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Arabic</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Other and unspecified languages</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The options to categorize diversity for languages spoken at home in this tool are </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>All 10 Languages with available data</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">, </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>Primarily speaks English at home/Does not primarily speak English at home</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">, and </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>Top 5 Languages in Boston with available data</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">.&nbsp;</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>All 10 Languages with available data</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">includes all specified and/or named languages (for example Korean as opposed to Other Asian and Pacific Island languages). This option provides more specificity in describing the character of multilingual households in Boston while remaining as inclusive as possible.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Primarily speaks English at home/Does not primarily speak English at home</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">compares those who speak only English at home to those who may speak English and another language or only another language at home. Since English has the plurality in the city and is also a major </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>lingua franca</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""> in the United States, this option considers the division between the most common language and other languages in which thousands of Americans speak and communicate on a daily basis.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Top 5 Languages in Boston with available data</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""> includes the languages spoken with higher frequency in Boston: English; Spanish; French, Haitian, or Cajun; Chinese (incl. Mandarin, Cantonese); and Vietnamese. This option focuses on the languages that are more commonly spoken in Boston than in other parts of the country, such as Vietnamese or Haitian Creole. To note, other prominent languages in Boston such as Portuguese and Kabuverdianu (Cape Verdean Creole) are not specifically enumerated in the American Community Survey.</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Further information about Boston&rsquo;s threshold languages or language access can be found at the </span></span></span><a href=""https://www.boston.gov/departments/language-and-communications-access"" style=""text-decoration:none""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><u>Mayor&#39;s Language and Communication Access Department</u></span></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">. The department does work with an equity-focused lens which includes advocating for translation services in Boston&rsquo;s top languages. </span></span></span></p>
+"
+educ,"<h2><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Data are collected for educational attainmnet for persons aged 25 years and older on the level of educational attainment or formal schooling. The available options are:&nbsp;</span></span></span></h2>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">No schooling completed,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Nursery to 4th grade,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">5th and 6th grade,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">7th and 8th grade,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">9th grade,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">10th grade,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">11th grade,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">12th grade, no diploma,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">High school graduate (includes equivalency),</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Some college, less than 1 year,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Some college, 1 or more years, no degree,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Associate&#39;s degree,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Bachelor&#39;s degree,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Master&#39;s degree,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Professional school degree, and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Doctorate degree.</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The options to categorize diversity for educational attainment in this tool are </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>5 Levels of Educational Attainment, Less than High School/High School or Higher, </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">and</span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> Less than a Bachelor&rsquo;s Degree/Bachelor&rsquo;s Degree or higher</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">.</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>5 Levels of Educational Attainment</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""> considers the following levels:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Less than high school,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">High School/GED or equivalent,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Some college/Associate&rsquo;s Degree,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Bachelor&rsquo;s Degree, and&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Master&rsquo;s Degree or Higher.&nbsp;</span></span></span></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Less than High School/High School or Higher</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">compares those who did not graduate high school or obtain a GED and those who completed high school and/or continued their formal education.&nbsp;</span></span></span></p>
+
+<p><br />
+<span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Less than a Bachelor&rsquo;s Degree/Bachelor&rsquo;s Degree or higher </em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">compares those who have formal schooling less than a Bachelor&rsquo;s Degree and those who obtained a Bachelor&rsquo;s Degree or a more advanced degree. </span></span> </span></span></span></p>
+"
+hh,"<h2><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Data are collected for all households on their household income in the last 12 months in 2021 inflation-adjusted dollars. The available options are:&nbsp;</span></span></span></h2>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Less than $10,000,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$10,000 to $14,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$15,000 to $19,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$20,000 to $24,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$25,000 to $29,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$30,000 to $34,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$35,000 to $39,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$40,000 to $44,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$45,000 to $49,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$50,000 to $59,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$60,000 to $74,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$75,000 to $99,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$100,000 to $124,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$125,000 to $149,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$150,000 to $199,999, and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$200,000 or more.</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The options to categorize diversity for household income in this tool are </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>6 Income Brackets, Below/Above Boston&rsquo;s Median Household Income, </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">and </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>3 Income Brackets</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">.</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>6 Income Brackets</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">separates households into the following bins:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Less than $25,000,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$25,000 to $49,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$50,000 to $74,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$75,000 to $99,999,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$100,000 to $124,999, and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">$125,000 or more</span></span></span></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>Below/Above Boston&rsquo;s Median Household Income </em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">splits the households by being above or below Boston&rsquo;s median household income of $81,744<sup>1</sup> in 2021. However, the available census options limit precision so the tool uses $75,000 as the median household income.&nbsp;&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>3 Income Brackets</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">separates households into the following categories:</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Low-income households (Less than $50,000),&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Middle-income households (Between $50,000 and less than $125,000), and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">High-income households ($125,000 or more).</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">These categories were chosen to represent a third of all households, i.e. there is an even split between the three categories at the city level. </span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><sup><span style=""font-size:10.8333px"">1</span></sup> Boston in Context 2023, BPDA Research Division</span></p>
+"
+pob,"<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Data is collected for all persons on place of birth and nativity status. There are too many available options for this particular category to list, but greater specificity will be given in the following descriptions.&nbsp;</span></span></span></p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The options to categorize diversity for region of birth in this tool are </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>By Nativity, By U.S. Region, By Boston&rsquo;s Top 10 Countries of Birth, </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">and </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>By the United States&rsquo; Top 10 Countries of Birth</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">.&nbsp;</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By Nativity</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">splits the population by whether an individual is considered Native-born or Foreign-born. Native-born can be defined as being born in the United States, Puerto Rico, or U.S. territories or being born abroad of American parents.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By U.S. Region</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">expands upon the earlier category by specifying in which region of the United States the individual was born. In particular, the regions are defined as follows:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Born in state of residence;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Northeast (Connecticut, Maine, Massachusetts</span></span></span><span style=""color:#d01c34""><span style=""font-size:11pt""><span style=""font-family:Arial"">*</span></span></span><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">, New Hampshire, New Jersey, New York, Pennsylvania, Rhode Island, and Vermont);</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Midwest (Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North Dakota, Ohio, South Dakota and Wisconsin);</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">South (Alabama, Arkansas, Delaware, District of Columbia, Florida, Georgia, Kentucky, Louisiana, Maryland, Mississippi, North Carolina, Oklahoma, South Carolina, Tennessee, Texas, Virginia and West Virginia);</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">West (Alaska, Arizona, California, Colorado, Hawaii, Idaho, Montana, Nevada, New Mexico, Oregon, Utah, Washington, and Wyoming);&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Born in U.S. territory or abroad of American parents; and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Foreign born</span></span></span></li>
+</ul>
+
+<p><em><span style=""color:#d01c34""><span style=""font-size:11pt""><span style=""font-family:Arial"">*For all of Boston, the state of residence is Massachusetts. For the comparable city calculations, the state of residence category is the state in which that particular city is located and people born in MA are grouped in the Northeast region. E.g. In San Francisco, people born in California are in their own group under &lsquo;born in state of residence&rsquo; whereas people from California in Boston are grouped as being from the &lsquo;West&rsquo;.&nbsp;</span></span></span></em></p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">This option places emphasis on geographic diversity within the United States as opposed to simply being born &lsquo;somewhere in the U.S.&rsquo; or not.&nbsp;&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By Boston&rsquo;s Top 10 Countries of Birth</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">places focus on the top countries of birth for the foreign-born population for Boston in 2021:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">China (incl. Hong Kong and Taiwan),</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The Dominican Republic,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Haiti,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Vietnam,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Cabo Verde,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Jamaica,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Colombia,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">India,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Trinidad and Tobago,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Brazil,</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">United States (incl. U.S. territories or born abroad of American parents), and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Other countries.</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">This option spotlights Boston-specific immigrant populations.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By the United States&rsquo; Top 10 Countries of Birth</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">places focus on the top countries of birth for the foreign-born population in the United States in 2021, which are:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Mexico,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">China,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">India,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Philippines,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">El Salvador,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Vietnam,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Cuba,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Dominican Republic,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Korea,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Guatemala,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">United States (incl. U.S. territories or born abroad of American parents),&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Other countries.</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">This option considers the overall immigrant makeup of the nation</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">For more information about the contributions of immigrants to the City of Boston, the </span></span></span><a href=""https://www.boston.gov/departments/immigrant-advancement"" style=""text-decoration:none""><span style=""color:#0fa6b4""><span style=""font-size:11pt""><span style=""font-family:Arial""><u>Mayor&rsquo;s Office of Immigrant Advancement</u></span></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""> works to strengthen the ability of immigrants to fully and equitably participate in economic, civic, social, and cultural life in Boston.&nbsp; </span></span></span></p>
+"
+age,"<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Data are collected for all persons.&nbsp;</span></span></span></p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">The options to categorize diversity for age in this tool are </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>By Broad Age Brackets, By adulthood status, </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">and </span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em>By Decade</em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">.</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By Broad Age Brackets</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""><em> </em></span></span><span style=""font-size:11pt""><span style=""font-family:Arial"">separates people into the following bins:&nbsp;</span></span></span></p>
+
+<ul>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">Under 17,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">18 to 34,&nbsp;</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">35 to 59, and</span></span></span></li>
+ <li style=""list-style-type:disc""><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">60 and over.</span></span></span></li>
+</ul>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">These bins roughly correspond to various stages of life (child, young adult, adult, and senior citizen).&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By adulthood status</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""> separates people based on whether or not they are under 18 or 18 and older.&nbsp;</span></span></span></p>
+
+<p>&nbsp;</p>
+
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""><strong><em>By Decade</em></strong></span></span><span style=""font-size:11pt""><span style=""font-family:Arial""> separates people into 10-year brackets (0-9 years old, 10-19 years old, etc.).&nbsp;</span></span></span></p>
+
+<hr />
+<p><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial"">For more information about young adults or older adults, </span></span></span><a href=""https://www.boston.gov/civic-engagement/spark-boston"" style=""text-decoration:none""><span style=""color:#0fa6b4""><span style=""font-size:11pt""><span style=""font-family:Arial""><u>SPARK Boston</u></span></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""> and the </span></span></span><a href=""https://www.boston.gov/departments/age-strong-commission"" style=""text-decoration:none""><span style=""color:#0fa6b4""><span style=""font-size:11pt""><span style=""font-family:Arial""><u>Age Strong Commission</u></span></span></span></a><span style=""color:#003d50""><span style=""font-size:11pt""><span style=""font-family:Arial""> provide various resources and equity-focused work for age-specific populations. </span></span></span></p>
+"
