@@ -314,7 +314,6 @@ cities_raw <- get_acs(geography = "place",
 cities_small <- cities_raw %>%
   filter(NAME %in% unlist(cities_of_int)) %>%
   select(!ends_with("M"))
-rm(cities_raw)
 
 # removing the E from the end of the variable names
 colnames(cities_small)[3:length(colnames(cities_small))-1] <- 

@@ -32,7 +32,7 @@ for(i in 1:length(all_tract_data)) {
 # need input and tract_df
 PIE_CHART_TRACT_FUNC <- function(tract_name){
   
-  tract_df_graph. <- tract_df_graph %>% filter(NAME == paste0(tract_name))
+  tract_df_graph <- tract_df_graph %>% filter(NAME == paste0(tract_name))
   
   # labeling variables 
   pie_labels <- colnames(tract_df_graph) %>% str_sub(start = str_length(selected_val) + 2) %>% str_replace_all("_", " ") 
@@ -79,9 +79,9 @@ plot_html_fxn <- function(tract_df, input) {
 
 
 plot_output_fxn <- function(tract_df) {
-  input_vals <- colnames(tract_df)[grepl("^val_", colnames(tract_df))]
+    input_vals <- colnames(tract_df)[grepl("^val_", colnames(tract_df))]
   for(i in 1:length(input_vals)) {
-    plot_html_fxn(tract_df, input_vals[i])
+    plot_html_fxn(tract_df = tract_df, input_vals[i])
   }
 }
 
@@ -91,3 +91,6 @@ plot_output_fxn(age_values)
 plot_output_fxn(hh_values)
 plot_output_fxn(lang_values)
 plot_output_fxn(educ_values)
+
+tract_df <- pob_values
+input <- "val_pob_us_regions"
