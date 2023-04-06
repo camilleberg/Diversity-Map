@@ -1,7 +1,7 @@
 # original map function 
 
-input <- "val_pob_us_regions"
-tract_df <- pob_values
+input <- "val_age_all"
+tract_df <- age_values
 scale_bool <- T
 
 
