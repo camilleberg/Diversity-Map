@@ -30,7 +30,7 @@ for(i in 1:length(all_tract_data)) {
 
 
 # need input and tract_df
-PIE_CHART_TRACT_FUNC <- function(tract_name){
+PIE_CHART_TRACT_FUNC <- function(tract_name, tract_df_graph, selected_val){
   
   tract_df_graph <- tract_df_graph %>% filter(NAME == paste0(tract_name))
   
@@ -57,14 +57,14 @@ plot_html_fxn <- function(tract_df, input) {
   
   # Gets rid of prefix. Used for starts with functionality
   selected_val <- str_sub(input, start = 5)
-  
-  # this filters out for only the variables of interest and 
-  # this function goes on a tract-by-tract basis
+
   tract_df_graph <- tract_df %>% 
     select(c(NAME, starts_with(selected_val)))
   
   # this creates the chart for each tract and stores them as a list
-  p_all_plotly <- lapply(tract_df_graph$NAME, PIE_CHART_TRACT_FUNC)
+  p_all_plotly <- lapply(tract_df$NAME, PIE_CHART_TRACT_FUNC, 
+                         tract_df_graph = tract_df_graph, 
+                         selected_val = selected_val)
   
   # this writes the list file as an external html file
   # this is nec to add as a popup in leaflet maps (idk why tho)
@@ -77,20 +77,23 @@ plot_html_fxn <- function(tract_df, input) {
   write_rds(p_all_plotly_html, paste0("graph_files/graph_", selected_val, ".RDS"))
 }
 
+# function to write input values
+input_val_fxn <- function(tract_df) {
+  var <- strsplit(deparse(substitute(tract_df)), "_")[[1]][1]
+  input_vals <- colnames(tract_df)[grepl("^val_", colnames(tract_df))]
+  assign(paste0(var, "_input_vals"), input_vals, envir = .GlobalEnv)
+}
+  # in case the oter thing (below) doesn't work
 
 plot_output_fxn <- function(tract_df) {
-    input_vals <- colnames(tract_df)[grepl("^val_", colnames(tract_df))]
+  input_vals <- colnames(tract_df)[grepl("^val_", colnames(tract_df))]
   for(i in 1:length(input_vals)) {
     plot_html_fxn(tract_df = tract_df, input_vals[i])
   }
 }
-
 plot_output_fxn(race_values)
 plot_output_fxn(pob_values)
 plot_output_fxn(age_values)
 plot_output_fxn(hh_values)
 plot_output_fxn(lang_values)
 plot_output_fxn(educ_values)
-
-tract_df <- pob_values
-input <- "val_pob_us_regions"
