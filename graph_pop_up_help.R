@@ -54,7 +54,7 @@ tract_df %>%
     smoothFactor = 0,
     fillOpacity = 0.7,
     color = ~ pal(current_data), group = 'current_data') %>%
-  leafpop:::addPopupIframes(source = p_all_plotly_html, group = 'current_data') %>%
+  leafpop:::addPopupIframes(source = p_all, group = 'current_data') %>%
   addLegend("bottomright", 
             pal = pal,
             values = ~ current_data,
@@ -62,6 +62,6 @@ tract_df %>%
             opacity = 1,
             na.label = 'Tracts with little or no population')
 
-p_all <- list.files(path = "./graph_files/", pattern = selected_val) %>% unlist() %>% readRDS()
+p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
 p_all <- graph_pob_us_regions %>% unlist()
 
