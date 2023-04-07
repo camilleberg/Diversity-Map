@@ -242,14 +242,7 @@ library(shinydlplot)
           #             rename_with( ~ gsub("_", " ", .x, fixed = TRUE)) %>%
           #             popupTable(feature.id = F,
           #                        row.numbers = F),
-          popup = tract_df %>%
-                      as_tibble() %>%
-                      mutate(`Census Tract` = str_sub(NAME, start = 14, end = -32)) %>%
-                      select(`Census Tract`, contains('Total', ignore.case = F), starts_with(selected_val)) %>%
-                      rename_with( ~ str_sub(.x, start = str_length(input) - 2), starts_with(selected_val)) %>%
-                      rename_with( ~ gsub("_", " ", .x, fixed = TRUE)) %>%
-                      popupTable(feature.id = F,
-                                 row.numbers = F),
+          popup = includeHTML(popup_test[[2]]),
                     stroke = F,
                     smoothFactor = 0,
                     fillOpacity = 0.7,
@@ -435,6 +428,8 @@ library(shinydlplot)
     pob_div_cities<- pob_div_cities%>% 
       mutate(City = NAME) %>% 
       select(-NAME)
+    
+    popup_test <- readRDS("./graph_files_map/graph_age_all.RDS")
   }
   
   #Titles and choices ##################################################################################################

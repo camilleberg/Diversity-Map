@@ -69,7 +69,7 @@ plot_html_fxn <- function(tract_df, input) {
   # this writes the list file as an external html file
   # this is nec to add as a popup in leaflet maps (idk why tho)
   p_all_plotly_html <- lapply(p_all_plotly, function(plot) {
-    f1 = fl = tempfile(fileext = ".html")
+    fl = tempfile(fileext = ".html")
     saveWidget(plot, file = fl)
     return(fl) 
   }
