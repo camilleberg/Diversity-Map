@@ -75,7 +75,7 @@ plot_html_fxn <- function(tract_df, input) {
   # this is nec to add as a popup in leaflet maps (idk why tho)
   p_all_plotly_html <- lapply(p_all_plotly, function(plot) {
     fl = tempfile(fileext = ".html")
-    saveWidget(plot, file = fl, selfcontained = FALSE)
+    saveWidget(plot, file = fl, selfcontained = TRUE)
     return(fl) 
   }
   )
