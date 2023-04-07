@@ -28,6 +28,10 @@ for(i in 1:length(all_tract_data)) {
   assign(paste0(var_name, "_values"), temp, envir = .GlobalEnv)
 }
 
+# for str wrap
+pie_legend_label_fxn <- function(pie_label_name) {
+  return(paste(strwrap(pie_label_name, width = 25), collapse = "<br>"))
+}
 
 # need input and tract_df
 PIE_CHART_TRACT_FUNC <- function(tract_name, tract_df_graph, selected_val){
@@ -36,6 +40,7 @@ PIE_CHART_TRACT_FUNC <- function(tract_name, tract_df_graph, selected_val){
   
   # labeling variables 
   pie_labels <- colnames(tract_df_graph) %>% str_sub(start = str_length(selected_val) + 2) %>% str_replace_all("_", " ") 
+  pie_labels <- lapply(pie_labels, pie_legend_label_fxn) %>% unlist()
   pie_labels <- pie_labels %>% factor(levels = pie_labels, ordered = T)
   pie_values <- as.numeric(as.vector(tract_df_graph[1,]))
   
@@ -70,7 +75,7 @@ plot_html_fxn <- function(tract_df, input) {
   # this is nec to add as a popup in leaflet maps (idk why tho)
   p_all_plotly_html <- lapply(p_all_plotly, function(plot) {
     fl = tempfile(fileext = ".html")
-    saveWidget(plot, file = fl)
+    saveWidget(plot, file = fl, selfcontained = FALSE)
     return(fl) 
   }
   )
