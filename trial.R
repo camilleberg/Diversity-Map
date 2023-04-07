@@ -16,8 +16,10 @@ scale_bool <- T
   # reading in the data
   p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
   
+  p_tracts <-tibble::enframe(p_all) %>% tidyr::pivot_wider() %>% t()
+  
   tract_df <- tract_df %>%
-    mutate(pie_graph = p_all %>% unlist())
+    mutate(pie_graph = p_tracts)
   
   NUM_VARIABLES <- tract_df %>% 
     select(starts_with(selected_val)) %>%  
@@ -73,7 +75,7 @@ tract_df %>%
     smoothFactor = 0,
     fillOpacity = 0.7,
     color = ~ pal(current_data), group = 'current_data', 
-    popup = popupGraph(p_all[[1]])
+    popup = popupGraph(p_all)
     ) %>%
   addLegend("bottomright", 
             pal = pal,
@@ -81,12 +83,3 @@ tract_df %>%
             title = legend_label,
             opacity = 1,
             na.label = 'Tracts with little or no population')
-
-p_example <- plot_ly(data = iris, x = ~Sepal.Length, y = ~Petal.Length)
-fl_example <- file_widget_fxn(p_example)
-  
-  file_widget_fxn <- function(plot) {
-    fl = tempfile(fileext = ".html")
-    saveWidget(plot, file = fl, selfcontained = TRUE)
-    return(fl) 
-  }
