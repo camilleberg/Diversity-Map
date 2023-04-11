@@ -195,18 +195,6 @@ library(shinydlplot)
       
       NUM_VARIABLES <- NUM_VARIABLES - 1
       
-      max_val <- 1 - (1/(NUM_VARIABLES))
-      
-      jank_minimum <- tract_df[tract_df$NAME == 'Census Tract 9815.01, Suffolk County, Massachusetts',]
-      jank_minimum$current_data <- 0
-      #jank_minimum$geometry <- list(list(c(-71.136596, -71.136273, 42.360161, 42.360903)))
-      jank_minimum$NAME <- 'min_val'
-      tract_df <- rbind(jank_minimum %>% st_as_sf(), tract_df)
-      
-      jank_max <- tract_df[tract_df$NAME == 'Census Tract 9813, Suffolk County, Massachusetts',]
-      jank_max$current_data <- max_val
-      jank_max$NAME <- 'max_val'
-      tract_df <- rbind(jank_max, tract_df)
       
       #tract_df <- tract_df %>% st_as_sf()
       
@@ -226,6 +214,13 @@ library(shinydlplot)
         legend_label <- "Percentile of Diversity Index"
       }
       
+      p_all <- read_rds(paste0("graph_files/graph_", selected_val, ".RDS"))
+      
+      p_tracts <-tibble::enframe(p_all) %>% tidyr::pivot_wider() %>% t()
+      
+      tract_df <- tract_df %>%
+        mutate(pie_graphs = p_tracts)
+      
       tract_df %>%
         mutate(current_data = ifelse(startsWith(NAME, "Census Tract 98"), NaN,current_data)) %>%
         st_transform(crs = "+init=epsg:4326") %>%
@@ -236,8 +231,8 @@ library(shinydlplot)
           stroke = F,
           smoothFactor = 0,
           fillOpacity = 0.7,
-          color = ~ pal(current_data), group = 'current_data', 
-          popup = popupGraph(p_all)
+          color = ~ pal(current_data), group = 'current_data',
+          popup = popupGraph(popup_test[[2]])
         ) %>%
         addLegend("bottomright", 
                   pal = pal,
@@ -245,7 +240,6 @@ library(shinydlplot)
                   title = legend_label,
                   opacity = 1,
                   na.label = 'Tracts with little or no population')
-      # setView(lat = 42.329581418741256, lng = -71.08116037656242, zoom = zoom_level)
     }
     
     min.col <- function(x){
@@ -421,7 +415,8 @@ library(shinydlplot)
       mutate(City = NAME) %>% 
       select(-NAME)
     
-    popup_test <- readRDS("./graph_files_map/graph_age_all.RDS")
+    popup_test <- read_rds("graph_files/graph_pob_top10.RDS")
+    
   }
   
   #Titles and choices ##################################################################################################
