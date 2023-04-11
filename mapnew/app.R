@@ -180,22 +180,26 @@ library(shinydlplot)
     MAP_FUNC <- function(input, scale_bool, tract_df){
       
       # zoom_level <- zoom_lvl
-      
       tract_df <- tract_df %>% st_as_sf()
       
       selected_val <- str_sub(input, start = 5)
-      
       tract_df$current_data <- tract_df[[input]]
-      p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
+      
+      # reading in the data
+      p_all <- paste0("graph_files/", list.files(path = "graph_files/", pattern = selected_val)) %>% read_rds()
+      # p_all <- read_rds(paste0("graph_files/graph_", selected_val, ".RDS"))
+      
+      p_tracts <-tibble::enframe(p_all) %>% tidyr::pivot_wider() %>% t()
+      
+      tract_df <- tract_df %>%
+        cbind(p_tracts)
       
       NUM_VARIABLES <- tract_df %>% 
         select(starts_with(selected_val)) %>%  
-        colnames() %>% 
-        length()
-      
-      NUM_VARIABLES <- NUM_VARIABLES - 1
+        ncol() - 1
       
       max_val <- 1 - (1/(NUM_VARIABLES))
+      
       
       jank_minimum <- tract_df[tract_df$NAME == 'Census Tract 9815.01, Suffolk County, Massachusetts',]
       jank_minimum$current_data <- 0
@@ -217,14 +221,17 @@ library(shinydlplot)
       #pal <- colorQuantile(palette = pal_option, domain = tract_df$current_data, n = 5)
       if (scale_bool){
         
+        #####FIGURE OUT WHY I NEED TO SUBTRACT 1
         pal <- colorNumeric(palette = pal_option, domain = c(0, max_val),
                             na.color = "#505050")
         legend_label <- "Diversity Index Score"
+        
       }else {
         pal <- colorQuantile(palette = pal_option, domain = tract_df$current_data, n = 5)
         
         legend_label <- "Percentile of Diversity Index"
       }
+      
       
       tract_df %>%
         mutate(current_data = ifelse(startsWith(NAME, "Census Tract 98"), NaN,current_data)) %>%
@@ -237,15 +244,14 @@ library(shinydlplot)
           smoothFactor = 0,
           fillOpacity = 0.7,
           color = ~ pal(current_data), group = 'current_data', 
-          popup = popupGraph(p_all)
-        ) %>%
+          popup = ~popupGraph(p_all, type = "html")) %>%
         addLegend("bottomright", 
                   pal = pal,
                   values = ~ current_data,
                   title = legend_label,
                   opacity = 1,
                   na.label = 'Tracts with little or no population')
-      # setView(lat = 42.329581418741256, lng = -71.08116037656242, zoom = zoom_level)
+      
     }
     
     min.col <- function(x){
@@ -421,7 +427,6 @@ library(shinydlplot)
       mutate(City = NAME) %>% 
       select(-NAME)
     
-    popup_test <- readRDS("./graph_files_map/graph_age_all.RDS")
   }
   
   #Titles and choices ##################################################################################################
