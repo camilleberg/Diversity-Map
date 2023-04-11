@@ -181,12 +181,12 @@ library(shinydlplot)
       
       # zoom_level <- zoom_lvl
       
-      p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
       tract_df <- tract_df %>% st_as_sf()
       
       selected_val <- str_sub(input, start = 5)
       
       tract_df$current_data <- tract_df[[input]]
+      p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
       
       NUM_VARIABLES <- tract_df %>% 
         select(starts_with(selected_val)) %>%  
@@ -226,7 +226,6 @@ library(shinydlplot)
         legend_label <- "Percentile of Diversity Index"
       }
       
-      
       tract_df %>%
         mutate(current_data = ifelse(startsWith(NAME, "Census Tract 98"), NaN,current_data)) %>%
         st_transform(crs = "+init=epsg:4326") %>%
@@ -237,8 +236,8 @@ library(shinydlplot)
           stroke = F,
           smoothFactor = 0,
           fillOpacity = 0.7,
-          color = ~ pal(current_data), group = 'current_data',
-          popup = popupGraph(p_all, type = "html")
+          color = ~ pal(current_data), group = 'current_data', 
+          popup = popupGraph(p_all)
         ) %>%
         addLegend("bottomright", 
                   pal = pal,
@@ -246,6 +245,7 @@ library(shinydlplot)
                   title = legend_label,
                   opacity = 1,
                   na.label = 'Tracts with little or no population')
+      # setView(lat = 42.329581418741256, lng = -71.08116037656242, zoom = zoom_level)
     }
     
     min.col <- function(x){
@@ -421,6 +421,7 @@ library(shinydlplot)
       mutate(City = NAME) %>% 
       select(-NAME)
     
+    popup_test <- readRDS("./graph_files_map/graph_age_all.RDS")
   }
   
   #Titles and choices ##################################################################################################

@@ -2,8 +2,8 @@
 
 rm(list = ls())
 
-{input <- "val_age_all"
-tract_df <- age_diversity_tract
+{input <- "val_pob_us_regions"
+tract_df <- pob_diversity_tract
 scale_bool <- T
 }
 
