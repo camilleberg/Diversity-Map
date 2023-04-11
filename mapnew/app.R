@@ -181,6 +181,7 @@ library(shinydlplot)
       
       # zoom_level <- zoom_lvl
       
+      p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
       tract_df <- tract_df %>% st_as_sf()
       
       selected_val <- str_sub(input, start = 5)
@@ -225,35 +226,26 @@ library(shinydlplot)
         legend_label <- "Percentile of Diversity Index"
       }
       
+      
       tract_df %>%
-        #filter(!(NAME %in% c("min_val", "max_val"))) %>% 
-        #add_row(current_data = 0) %>% 
         mutate(current_data = ifelse(startsWith(NAME, "Census Tract 98"), NaN,current_data)) %>%
         st_transform(crs = "+init=epsg:4326") %>%
-        leaflet(height = "100%",
-                width = "100%") %>%
-        addProviderTiles(provider = "CartoDB.Positron") %>%
+        leaflet() %>% 
+        addTiles() %>%
+        addProviderTiles(provider = "CartoDB.Positron")  %>%
         addPolygons(
-          # popup = tract_df %>% 
-          #             as_tibble() %>% 
-          #             mutate(`Census Tract` = str_sub(NAME, start = 14, end = -32)) %>% 
-          #             select(`Census Tract`, contains('Total', ignore.case = F), starts_with(selected_val)) %>%
-          #             rename_with( ~ str_sub(.x, start = str_length(input) - 2), starts_with(selected_val)) %>%
-          #             rename_with( ~ gsub("_", " ", .x, fixed = TRUE)) %>%
-          #             popupTable(feature.id = F,
-          #                        row.numbers = F),
-          popup = includeHTML(popup_test[[2]]),
-                    stroke = F,
-                    smoothFactor = 0,
-                    fillOpacity = 0.7,
-                    color = ~ pal(current_data)) %>%
+          stroke = F,
+          smoothFactor = 0,
+          fillOpacity = 0.7,
+          color = ~ pal(current_data), group = 'current_data',
+          popup = popupGraph(p_all, type = "html")
+        ) %>%
         addLegend("bottomright", 
                   pal = pal,
                   values = ~ current_data,
                   title = legend_label,
                   opacity = 1,
-                  na.label = 'Tracts with little or no population') #%>% 
-      # setView(lat = 42.329581418741256, lng = -71.08116037656242, zoom = zoom_level)
+                  na.label = 'Tracts with little or no population')
     }
     
     min.col <- function(x){
@@ -429,7 +421,6 @@ library(shinydlplot)
       mutate(City = NAME) %>% 
       select(-NAME)
     
-    popup_test <- readRDS("./graph_files_map/graph_age_all.RDS")
   }
   
   #Titles and choices ##################################################################################################

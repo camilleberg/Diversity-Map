@@ -74,8 +74,8 @@ tract_df %>%
     stroke = F,
     smoothFactor = 0,
     fillOpacity = 0.7,
-    color = ~ pal(current_data), group = 'current_data', 
-    popup = popupGraph(p_all)
+    color = ~ pal(current_data), group = 'current_data',
+    popup = popupGraph(p_all, type = "html")
     ) %>%
   addLegend("bottomright", 
             pal = pal,
