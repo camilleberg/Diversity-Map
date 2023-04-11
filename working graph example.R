@@ -1,5 +1,5 @@
 {input <- "val_age_all"
-tract_df <- age_values
+tract_df <- age_diversity_tract
 scale_bool <- T
 }
 
