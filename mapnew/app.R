@@ -1,23 +1,21 @@
 {
-library(DT)
-library(leaflet)
-library(leafpop)
-library(mapview)
-library(plotly)
-library(RColorBrewer)
-library(sf)
-library(shiny)
-library(shinythemes)
-library(stringr)
-library(tidycensus)
-library(tidyverse)
-library(viridis)
-library(hash)
-library(shinyjs)
-library(shinydlplot)
+  library(DT)
+  library(leaflet)
+  library(leafpop)
+  library(plotly)
+  library(RColorBrewer)
+  library(sf)
+  library(shiny)
+  library(shinythemes)
+  library(stringr)
+  library(tidycensus)
+  library(tidyverse)
+  library(viridis)
+  library(shinyjs)
+  library(shinydlplot)
 }
 
-#Setup ##################################################################################################
+#Setup ###################################################################################################
 {
   #Functions & Constants ##################################################################################################
   {
@@ -25,17 +23,18 @@ library(shinydlplot)
     html_fix <- as.character(htmltools::tags$style(type = "text/css", css_fix))  # Convert CSS to HTML
     
     #Text for raw or scaled button
-    raw_scale_text <- "The raw data shows the actual scores from the diversity index calculation. <br> The scaled option ranks all of the tracts in the city. 
-      This can create more variation as there will always be a most and least diverse tract. But can also accentuate any differences in the city."
+    raw_scale_text <- '<p><span style="color:#003d50"><span style="font-size:11pt"><span style="font-family:Arial">The raw data option shows the actual scores from the diversity index calculation. <br> 
+    The scaled option ranks all of the tracts in the city. This creates more visual distinction as there will always be a most and least diverse tract. 
+    It can accentuate any differences in the city if tracts have similar index value.</span></span></span></h2>'
     
     #was going to do more. Might pull from spreadsheet in the future
-    TAB_NAMES <- c("Map", "City Comparison Table","Neighborhood Table","City Comparison Graph","Neighborhood Graph")
+    TAB_NAMES <- c("Map", "City Comparison Table","Neighborhood Table","City Graph","Neighborhood Graph")
     
-    raw_scale_dialog <- modalDialog(title = "Raw Data vs. Scaled Data", HTML(raw_scale_text), easyClose = TRUE)
+    raw_scale_dialog <- modalDialog(title = HTML('<h1><span style="color:#0fa6b4"><strong> Raw Data vs. Scaled Data</strong></span></h1>'), 
+                                    HTML(raw_scale_text), easyClose = TRUE)
     
     #Options for table, currently not being used
-    TABLE_OPTIONS <- list(searching = F, lengthChange = F, info = F, paging = F,
-                          order = list(2, 'desc'), rownames = F)
+    TABLE_OPTIONS <- list(searching = F, lengthChange = F, info = F, paging = F, order = list(2, 'desc'), rownames = F)
     
     #popup dialogue functions
     GET_POPUP <- function(var){
@@ -68,48 +67,16 @@ library(shinydlplot)
       
       pie_chart <- plot_ly(labels = ~pie_labels, values = ~pie_values, 
                            type = 'pie', sort = F,
+                           rotation = ifelse(input %in% pob_choices$category_val, 270, 0),
                            marker = list(colors = c("#fdb462","#8dd3c7","#ffffb3","#bebada","#b3de69",
                                               "#fccde5","#d9d9d9","#9c755f","#d37295","#00ffd0","#9467bd"))) %>%
         layout(title = fancy_text(selected_value),
                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
                yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
       pie_chart
-      
-    }
-    
-    NEIGH_TABLE_FUNC <- function(input, div_df){
-      
-      div_df <- div_df %>% as_tibble()
-      
-      div_df[[input]] <- div_df[[input]] %>% 
-        as.numeric() %>% 
-        round(digits = 2) 
-      
-      div_df %>% 
-        select(tract20_nbhd, input)%>% 
-        datatable(options = TABLE_OPTIONS) %>% 
-        formatStyle('tract20_nbhd', 
-                    target = 'row', 
-                    backgroundColor = styleEqual(c("Citywide"), c('yellow')))
-    }
-    
-    CITY_TABLE_FUNC <- function(input, div_df){
-      
-      div_df[[input]] <- div_df[[input]] %>% 
-        as.numeric() %>% 
-        round(digits = 2) 
-      
-      div_df %>% 
-        select(City, input) %>% 
-        datatable(options = TABLE_OPTIONS) %>% 
-        formatStyle('City', 
-                    target = 'row', 
-                    backgroundColor = styleEqual(c("Boston city, Massachusetts"), c('yellow')))
     }
     
     NEIGH_BUTTON_FUNC <- function(input, div_df){
-      
-      div_df <- div_df %>% as_tibble()
       
       div_df[[input]] <- div_df[[input]] %>% 
         as.numeric() %>% 
@@ -144,13 +111,11 @@ library(shinydlplot)
                 type = "bar",
                 orientation = "h",
                 color = ~tract20_nbhd == "Citywide", 
-                colors = c("#008ebb","#cf1c46"),
+                colors = c("#2597ba","#cf4666"),
                 height = 750) %>%
         hide_legend() %>% 
-        layout(xaxis = list(title = "Diversity Index Value",
-                            side ="top"),
-               yaxis = list(title = 'Neighborhood',
-                            categoryorder = "total ascending"))
+        layout(xaxis = list(title = "Diversity Index Value", side ="top"),
+               yaxis = list(title = '', categoryorder = "total ascending"))
     }
     
     CITY_GRAPH_FUNC <- function(input, div_df){
@@ -168,25 +133,20 @@ library(shinydlplot)
                 type = "bar",
                 orientation = "h",
                 color = ~City == "Boston city, Massachusetts", 
-                colors = c("#008ebb","#cf1c46"),
+                colors = c("#2597ba","#cf4666"),
                 height = 750) %>%
         hide_legend() %>% 
-        layout(xaxis = list(title = "Diversity Index Value",
-                            side ="top"),
-               yaxis = list(title = '',
-                            categoryorder = "total ascending"))
+        layout(xaxis = list(title = "Diversity Index Value", side ="top"),
+               yaxis = list(title = '', categoryorder = "total ascending"))
     }
     
     MAP_FUNC <- function(input, scale_bool, tract_df){
-      
-      # zoom_level <- zoom_lvl
       
       tract_df <- tract_df %>% st_as_sf()
       
       selected_val <- str_sub(input, start = 5)
       
       tract_df$current_data <- tract_df[[input]]
-      p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
       
       NUM_VARIABLES <- tract_df %>% 
         select(starts_with(selected_val)) %>%  
@@ -195,10 +155,12 @@ library(shinydlplot)
       
       NUM_VARIABLES <- NUM_VARIABLES - 1
       
-      
-      #tract_df <- tract_df %>% st_as_sf()
-      
+      max_val <- 1 - (1/(NUM_VARIABLES))
+
       pal_option <- "RdYlBu"
+      
+      # p_all <- read_rds(paste0("graph_files/graph_", selected_val, ".RDS"))
+      p_all <- paste0("./graph_files/", list.files(path = "./graph_files/", pattern = selected_val)) %>% readRDS()
       
       # pal_option <- addalpha(pal_option, alpha = .5)
       
@@ -214,32 +176,49 @@ library(shinydlplot)
         legend_label <- "Percentile of Diversity Index"
       }
       
-      p_all <- read_rds(paste0("graph_files/graph_", selected_val, ".RDS"))
-      
-      p_tracts <-tibble::enframe(p_all) %>% tidyr::pivot_wider() %>% t()
-      
-      tract_df <- tract_df %>%
-        mutate(pie_graphs = p_tracts)
-      
       tract_df %>%
+        #filter(!(NAME %in% c("min_val", "max_val"))) %>% 
+        #add_row(current_data = 0) %>% 
         mutate(current_data = ifelse(startsWith(NAME, "Census Tract 98"), NaN,current_data)) %>%
         st_transform(crs = "+init=epsg:4326") %>%
-        leaflet() %>% 
-        addTiles() %>%
-        addProviderTiles(provider = "CartoDB.Positron")  %>%
+        leaflet(height = "100%",
+                width = "100%") %>%
+        addProviderTiles(provider = "CartoDB.Positron") %>%
+          # popup = tract_df %>% 
+          #             as_tibble() %>% 
+          #             mutate(`Census Tract` = str_sub(NAME, start = 14, end = -32)) %>% 
+          #             select(`Census Tract`, contains('Total', ignore.case = F), starts_with(selected_val)) %>%
+          #             rename_with( ~ str_sub(.x, start = str_length(input) - 2), starts_with(selected_val)) %>%
+          #             rename_with( ~ gsub("_", " ", .x, fixed = TRUE)) %>%
+          #             popupTable(feature.id = F,
+          #                        row.numbers = F),
         addPolygons(
-          stroke = F,
-          smoothFactor = 0,
-          fillOpacity = 0.7,
-          color = ~ pal(current_data), group = 'current_data',
-          popup = popupGraph(popup_test[[2]])
-        ) %>%
+          popup = tract_df %>%
+                      as_tibble() %>%
+                      mutate(`Census Tract` = str_sub(NAME, start = 14, end = -32)) %>%
+                      select(`Census Tract`, contains('Total', ignore.case = F), starts_with(selected_val)) %>%
+                      rename_with( ~ str_sub(.x, start = str_length(input) - 2), starts_with(selected_val)) %>%
+                      rename_with( ~ gsub("_", " ", .x, fixed = TRUE)) %>%
+                      popupTable(feature.id = F, row.numbers = F),
+                    stroke = F,
+                    smoothFactor = 0,
+                    fillOpacity = 0.7,
+                    color = ~ pal(current_data)) %>%
+          # addPolygons(
+          #   stroke = F,
+          #   smoothFactor = 0,
+          #   fillOpacity = 0.7,
+          #   color = ~ pal(current_data), group = 'current_data', 
+          #   popup = popupGraph(p_all)
+          # ) %>% 
+        # leafpop:::addPopupIframes(source = p_all, group = 'current_data') %>%
         addLegend("bottomright", 
                   pal = pal,
-                  values = ~ current_data,
+                  values = ~ current_data %>% append(values = c(0, max_val)),
                   title = legend_label,
                   opacity = 1,
-                  na.label = 'Tracts with little or no population')
+                  na.label = 'Tracts with little or no population') 
+
     }
     
     min.col <- function(x){
@@ -261,26 +240,27 @@ library(shinydlplot)
       
       low_n <- bos[[lowest_col]]
       high_n <- bos[[highest_col]]
-      paste0("<h3>", nice_name, "</h3> <p> <strong>#", low_n, 
-             "</strong> when choosing <strong>", fancy_text(lowest_col), "</strong> <p> <strong>#", high_n,
-             "</strong> when choosing <strong>", fancy_text(highest_col), "</strong>")
+      
+      paste0("<h3>", nice_name, "</h3> <p> <strong>#", 
+             low_n, "</strong> when choosing <strong>", fancy_text(lowest_col), "</strong> <p> <strong>#", 
+             high_n, "</strong> when choosing <strong>", fancy_text(highest_col), "</strong>")
     }
-    BUILD_MINMAX_CITY <- function(){
+    GET_MINMAX_CITY <- function(){
         paste0("<h2>Highest and Lowest Rankings out of 25 Comparable Cities</h2>",
-               COL_MINMAX_CITIES("race"),
-               COL_MINMAX_CITIES("pob"),
-               COL_MINMAX_CITIES("hh"),
-               COL_MINMAX_CITIES("educ") ,
-               COL_MINMAX_CITIES("lang"),      
-               COL_MINMAX_CITIES("age"))
+               COL_MINMAX_CITIES("race"), COL_MINMAX_CITIES("pob"), COL_MINMAX_CITIES("hh"), 
+               COL_MINMAX_CITIES("educ"), COL_MINMAX_CITIES("lang"), COL_MINMAX_CITIES("age"))
     }
     
     COL_MINMAX_NEIGH <- function(var, neigh){
       
       nice_name <- fancy_text(var)
       
-      bos <- all_neigh_ranked %>% 
-        #colnames(DF)[max.col(DF,ties.method="first")]
+      just_bos <- all_cities_ranked %>% 
+        filter(City == "Boston city, Massachusetts") %>% 
+        rename(tract20_nbhd = City)
+      
+      bos <- just_bos %>% 
+        rbind(all_neigh_ranked) %>% 
         filter(tract20_nbhd == neigh) %>% 
         select(contains(var))
       
@@ -290,29 +270,21 @@ library(shinydlplot)
       low_n <- bos[[lowest_col]]
       high_n <- bos[[highest_col]]
       paste0("<h3>", nice_name, "</h3> <p> ",
-             "<strong>#", low_n, 
-             "</strong> when choosing <strong>", fancy_text(lowest_col), "</strong> <p> ",
-             "<strong>#", high_n,
-             "</strong> when choosing <strong>", fancy_text(highest_col), "</strong>")
+             "<strong>#", low_n,  "</strong> when choosing <strong>", fancy_text(lowest_col), "</strong> <p> ",
+             "<strong>#", high_n, "</strong> when choosing <strong>", fancy_text(highest_col), "</strong>")
     }
-    BUILD_MINMAX_NEIGH <- function(neigh_input){
+    GET_MINMAX_NEIGH <- function(neigh_input){
       
       paste0("<h2>Highest and lowest rankings out of 24 Neighborhoods: <strong>", neigh_input, "</strong> </h2>",
-             COL_MINMAX_NEIGH("race", neigh_input),
-             COL_MINMAX_NEIGH("pob", neigh_input),
-             COL_MINMAX_NEIGH("hh", neigh_input),
-             COL_MINMAX_NEIGH("educ", neigh_input) ,
-             COL_MINMAX_NEIGH("lang", neigh_input),      
-             COL_MINMAX_NEIGH("age", neigh_input))
-      
+             COL_MINMAX_NEIGH("race", neigh_input), COL_MINMAX_NEIGH("pob", neigh_input), COL_MINMAX_NEIGH("hh", neigh_input),
+             COL_MINMAX_NEIGH("educ", neigh_input), COL_MINMAX_NEIGH("lang", neigh_input), COL_MINMAX_NEIGH("age", neigh_input))
     }
-    
     
     BUILD_RADIO_BUTTONS <- function(id, lab){
       radioButtons(inputId = id,
                    label = lab,
                    choices = list("Raw Data" = T,
-                                  "Scaled" = F))
+                                  "Scaled Data" = F))
     }
     
     GET_BUTTONS <- function(cat){
@@ -414,14 +386,10 @@ library(shinydlplot)
     pob_div_cities<- pob_div_cities%>% 
       mutate(City = NAME) %>% 
       select(-NAME)
-    
-    popup_test <- read_rds("graph_files/graph_pob_top10.RDS")
-    
   }
   
   #Titles and choices ##################################################################################################
   {
-    
     categories <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "categories")
     text <- readxl::read_xlsx("div_map_categories.xlsx", sheet = "text_descriptions")
     
@@ -444,6 +412,17 @@ library(shinydlplot)
     
     neigh_choices <- neigh_choices[! neigh_choices %in% c('Citywide')]
     
+    css_pieces <- read_csv("tab_css.csv")
+    
+    css_text <- ""
+    for (i in 1:length(css_pieces$tab_titles)) {
+      
+      current_text <- paste0(".tabbable > .nav > li > a[data-value='", css_pieces$tab_titles[i], "'] {color: #ffffff; font-family: Arial,Helvetica,sans-serif;background-color:", 
+                     css_pieces$tab_colors2[i], 
+                     "; }")
+      css_text <- paste(css_text, current_text)
+    }
+    
   }
   
   #Combining dfs ##################################################################################################
@@ -455,14 +434,12 @@ library(shinydlplot)
     lang_div_tract$current_data <- lang_div_tract[lang_choices$category_val[[1]]]
     pob_div_tract$current_data <- pob_div_tract[pob_choices$category_val[[1]]]
     
-    
     all_neigh <- race_div_neigh %>% 
       left_join(pob_div_neigh)  %>% 
       left_join(hh_div_neigh)  %>%
       left_join(lang_div_neigh)  %>%
       left_join(educ_div_neigh)  %>%
       left_join(age_div_neigh)
-    
     
     all_cities <- race_div_cities %>% 
       left_join(pob_div_cities)  %>% 
@@ -480,54 +457,46 @@ library(shinydlplot)
       select(tract20_nbhd, starts_with("val_")) %>% 
       mutate(across(starts_with("val_"), INVERSE_RANK, .names = "rank_{col}")) %>% 
       select(tract20_nbhd, starts_with("rank_"))
-    
   }
 }
 #UI ##################################################################################################
 ui <- fluidPage(
   
-  useShinyjs(),
+  # useShinyjs(),
   theme = shinytheme("lumen"),
   HTML(html_fix),
   tags$head(tags$link(rel="shortcut icon", href="favicon.ico")),
-  tags$style(HTML(
-    ".tabbable > .nav > li > a[data-value='About'] {background-color: #dae1ed;   color:black}
-    .tabbable > .nav > li > a[data-value='Boston Min/Max'] {background-color: #dae1ed;   color:black}
-    .tabbable > .nav > li > a[data-value='Neighborhood Min/Max'] {background-color: #dae1ed;   color:black}"
-    )),
+  tags$style(HTML(css_text)),
 
-  #titlePanel("Diversity Map"),
-  
+  titlePanel("Diversity Map"),
+
   tabsetPanel(
     tabPanel("About",
              {HTML(text$title_text[1])}
     ),
-    tabPanel("Race and Ethnicity",
+    tabPanel("Race & Ethnicity",
              sidebarLayout(
                sidebarPanel(
                  radioButtons(inputId = "race",
                               label = actionButton("race_popup", "Category Breakdown"),
-                              choiceNames = race_choices$category_name,
-                              choiceValues = race_choices$category_val),
-
-                 BUILD_RADIO_BUTTONS("race_bool", lab = actionButton("race_help", "Raw or Scaled?")),
-                 plotlyOutput("race_pie")
-               ),
+                              choiceNames = race_choices$category_name, choiceValues = race_choices$category_val),
+                 BUILD_RADIO_BUTTONS("race_bool", lab = actionButton("race_help", "Legend Type")),
+                 plotlyOutput("race_pie")),
                mainPanel(
                  tabsetPanel(
                    tabPanel(TAB_NAMES[1],
-                            tags$style(type = "text/css", "#race_map {height: calc(70vh) !important;}"),
+                            tags$style(type = "text/css", "#race_map {height: calc(85vh) !important;}"),
                             leafletOutput("race_map")),
-                   tabPanel(TAB_NAMES[4],  
-                            fluidRow(
-                              column(width = 10), column(downloadButton("race_cities_download", label = "Download as CSV"), width = 2),
-                              column(width = 12,
-                            plotlyOutput("race_graph_cities")))),
                    tabPanel(TAB_NAMES[5],  
                             fluidRow(
-                              column(width = 10), column(downloadButton("race_neigh_download", label = "Download as CSV"), width = 2),
+                              column(width = 10), column(downloadButton("race_neigh_download", label = "Download Data"), width = 2),
                               column(width = 12,
-                            plotlyOutput("race_graph_neigh"))))
+                            plotlyOutput("race_graph_neigh")))),                   
+                   tabPanel(TAB_NAMES[4],  
+                            fluidRow(
+                              column(width = 10), column(downloadButton("race_cities_download", label = "Download Data"), width = 2),
+                              column(width = 12,
+                            plotlyOutput("race_graph_cities"))))
                  )
                )
              )
@@ -537,26 +506,24 @@ ui <- fluidPage(
                sidebarPanel(
                  radioButtons(inputId = "pob",
                               label = actionButton("pob_popup", "Category Breakdown"),
-                              choiceNames = pob_choices$category_name,
-                              choiceValues = pob_choices$category_val),
-                 BUILD_RADIO_BUTTONS("pob_bool", lab = actionButton("pob_help", "Raw or Scaled?")),
-                 plotlyOutput("pob_pie")
-               ),
+                              choiceNames = pob_choices$category_name, choiceValues = pob_choices$category_val),
+                 BUILD_RADIO_BUTTONS("pob_bool", lab = actionButton("pob_help", "Legend Type")),
+                 plotlyOutput("pob_pie")),
                mainPanel(
                  tabsetPanel(
                    tabPanel(TAB_NAMES[1],
-                            tags$style(type = "text/css", "#pob_map {height: calc(70vh) !important;}"),
+                            tags$style(type = "text/css", "#pob_map {height: calc(85vh) !important;}"),
                             leafletOutput("pob_map")),
-                   tabPanel(TAB_NAMES[4], 
-                            fluidRow(
-                              column(width = 10), column(downloadButton("pob_cities_download", label = "Download as CSV"), width = 2),
-                              column(width = 12,
-                            plotlyOutput("pob_graph_cities")))),
                    tabPanel(TAB_NAMES[5], 
                             fluidRow(
-                              column(width = 10), column(downloadButton("pob_neigh_download", label = "Download as CSV"), width = 2),
+                              column(width = 10), column(downloadButton("pob_neigh_download", label = "Download Data"), width = 2),
                               column(width = 12,
-                            plotlyOutput("pob_graph_neigh"))))
+                                     plotlyOutput("pob_graph_neigh")))),
+                   tabPanel(TAB_NAMES[4], 
+                            fluidRow(
+                              column(width = 10), column(downloadButton("pob_cities_download", label = "Download Data"), width = 2),
+                              column(width = 12,
+                            plotlyOutput("pob_graph_cities"))))
                  )
                )
              )
@@ -566,27 +533,24 @@ ui <- fluidPage(
                sidebarPanel(
                  radioButtons(inputId = "hh",
                               label = actionButton("hh_popup", "Category Breakdown"),
-                              choiceNames = hh_choices$category_name,
-                              choiceValues = hh_choices$category_val),
-                 BUILD_RADIO_BUTTONS("hh_bool", lab = actionButton("hh_help", "Raw or Scaled?")),
-                 plotlyOutput("hh_pie")
-               ),
+                              choiceNames = hh_choices$category_name, choiceValues = hh_choices$category_val),
+                 BUILD_RADIO_BUTTONS("hh_bool", lab = actionButton("hh_help", "Legend Type")),
+                 plotlyOutput("hh_pie")),
                mainPanel(
                  tabsetPanel(
                    tabPanel(TAB_NAMES[1],
-                            tags$style(type = "text/css", "#hh_map {height: calc(70vh) !important;}"),
+                            tags$style(type = "text/css", "#hh_map {height: calc(85vh) !important;}"),
                             leafletOutput("hh_map")),
-                   tabPanel(TAB_NAMES[4], 
-                            fluidRow(
-                              column(width = 10), column(downloadButton("hh_cities_download", label = "Download as CSV"), width = 2),
-                              column(width = 12,
-                            plotlyOutput("hh_graph_cities")))),
                    tabPanel(TAB_NAMES[5], 
                             fluidRow(
-                              column(width = 10), column(downloadButton("hh_neigh_download", label = "Download as CSV"), width = 2),
+                              column(width = 10), column(downloadButton("hh_neigh_download", label = "Download Data"), width = 2),
                               column(width = 12,
-                            plotlyOutput("hh_graph_neigh")))
-                   )
+                            plotlyOutput("hh_graph_neigh")))),
+                   tabPanel(TAB_NAMES[4], 
+                            fluidRow(
+                              column(width = 10), column(downloadButton("hh_cities_download", label = "Download Data"), width = 2),
+                              column(width = 12,
+                                     plotlyOutput("hh_graph_cities")))),
                  )
                )
              )
@@ -596,26 +560,24 @@ ui <- fluidPage(
                sidebarPanel(
                  radioButtons(inputId = "lang",
                               label = actionButton("lang_popup", "Category Breakdown"),
-                              choiceNames = lang_choices$category_name,
-                              choiceValues = lang_choices$category_val),
-                 BUILD_RADIO_BUTTONS("lang_bool", lab = actionButton("lang_help", "Raw or Scaled?")),
-                 plotlyOutput("lang_pie")
-               ),
+                              choiceNames = lang_choices$category_name, choiceValues = lang_choices$category_val),
+                 BUILD_RADIO_BUTTONS("lang_bool", lab = actionButton("lang_help", "Legend Type")),
+                 plotlyOutput("lang_pie")),
                mainPanel(
                  tabsetPanel(
                    tabPanel(TAB_NAMES[1],
-                            tags$style(type = "text/css", "#lang_map {height: calc(70vh) !important;}"),
+                            tags$style(type = "text/css", "#lang_map {height: calc(85vh) !important;}"),
                             leafletOutput("lang_map")),
-                   tabPanel(TAB_NAMES[4], 
-                            fluidRow(
-                              column(width = 10), column(downloadButton("lang_cities_download", label = "Download as CSV"), width = 2),
-                              column(width = 12,
-                            plotlyOutput("lang_graph_cities")))),
                    tabPanel(TAB_NAMES[5], 
                             fluidRow(
-                              column(width = 10), column(downloadButton("lang_neigh_download", label = "Download as CSV"), width = 2),
+                              column(width = 10), column(downloadButton("lang_neigh_download", label = "Download Data"), width = 2),
                               column(width = 12,
-                            plotlyOutput("lang_graph_neigh"))))
+                                     plotlyOutput("lang_graph_neigh")))),
+                   tabPanel(TAB_NAMES[4], 
+                            fluidRow(
+                              column(width = 10), column(downloadButton("lang_cities_download", label = "Download Data"), width = 2),
+                              column(width = 12,
+                            plotlyOutput("lang_graph_cities"))))
                  )
                )
              )
@@ -625,72 +587,72 @@ ui <- fluidPage(
                sidebarPanel(
                  radioButtons(inputId = "educ",
                               label = actionButton("educ_popup", "Category Breakdown"),
-                              choiceNames = educ_choices$category_name,
-                              choiceValues = educ_choices$category_val),
-                 BUILD_RADIO_BUTTONS("educ_bool", lab = actionButton("educ_help", "Raw or Scaled?")),
-                 plotlyOutput("educ_pie")
-               ),
+                              choiceNames = educ_choices$category_name, choiceValues = educ_choices$category_val),
+                 BUILD_RADIO_BUTTONS("educ_bool", lab = actionButton("educ_help", "Legend Type")),
+                 plotlyOutput("educ_pie")),
                mainPanel(
                  tabsetPanel(
                    tabPanel(TAB_NAMES[1],
-                            tags$style(type = "text/css", "#educ_map {height: calc(70vh) !important;}"),
+                            tags$style(type = "text/css", "#educ_map {height: calc(85vh) !important;}"),
                             leafletOutput("educ_map")),
-                   tabPanel(TAB_NAMES[4], 
-                            fluidRow(
-                              column(width = 10), column(downloadButton("educ_cities_download", label = "Download as CSV"), width = 2),
-                              column(width = 12,
-                            plotlyOutput("educ_graph_cities")))),
                    tabPanel(TAB_NAMES[5], 
                             fluidRow(
-                              column(width = 10), column(downloadButton("educ_neigh_download", label = "Download as CSV"), width = 2),
+                              column(width = 10), column(downloadButton("educ_neigh_download", label = "Download Data"), width = 2),
                               column(width = 12,
-                            plotlyOutput("educ_graph_neigh"))))
+                            plotlyOutput("educ_graph_neigh")))),
+                   tabPanel(TAB_NAMES[4], 
+                            fluidRow(
+                              column(width = 10), column(downloadButton("educ_cities_download", label = "Download Data"), width = 2),
+                              column(width = 12,
+                                     plotlyOutput("educ_graph_cities"))))
                  )
                )
              )
     ),
-    
     tabPanel("Age",
              sidebarLayout(
                sidebarPanel(
                  radioButtons(inputId = "age",
                               label = actionButton("age_popup", "Category Breakdown"),
-                              choiceNames = age_choices$category_name,
-                              choiceValues = age_choices$category_val),
-                 BUILD_RADIO_BUTTONS("age_bool", lab = actionButton("age_help", "Raw or Scaled?")),
-                 plotlyOutput("age_pie")
-               ),
+                              choiceNames = age_choices$category_name, choiceValues = age_choices$category_val),
+                 BUILD_RADIO_BUTTONS("age_bool", lab = actionButton("age_help", "Legend Type")),
+                 plotlyOutput("age_pie")),
                mainPanel(
                  tabsetPanel(                       
                    tabPanel(TAB_NAMES[1],
-                            tags$style(type = "text/css", "#age_map {height: calc(70vh) !important;}"),
+                            tags$style(type = "text/css", "#age_map {height: calc(85vh) !important;}"),
                             leafletOutput("age_map")),
+                   tabPanel(TAB_NAMES[5], 
+                            fluidRow(
+                              column(width = 10), column(downloadButton("age_neigh_download", label = "Download Data"), width = 2),
+                              column(width = 12,
+                                     plotlyOutput("age_graph_neigh")))),
                    tabPanel(TAB_NAMES[4], 
                             fluidRow(
-                              column(width = 10), column(downloadButton("age_cities_download", label = "Download as CSV"), width = 2),
+                              column(width = 10), column(downloadButton("age_cities_download", label = "Download Data"), width = 2),
                               column(width = 12,
-                            plotlyOutput("age_graph_cities")))),
-                   tabPanel(TAB_NAMES[5], 
-                             fluidRow(
-                               column(width = 10), column(downloadButton("age_neigh_download", label = "Download as CSV"), width = 2),
-                             column(width = 12,
-                               plotlyOutput("age_graph_neigh"))))
+                            plotlyOutput("age_graph_cities"))))
                  )
                )
              )
     ),
-    tabPanel("Boston Min/Max",
-             verticalLayout(
-               htmlOutput("bos_minmax"))
-    ),
-    tabPanel("Neighborhood Min/Max",
-             sidebarLayout(
-               sidebarPanel(
-                 radioButtons(inputId = "neigh_select",
-                              label = "Select Neighborhood",
-                              choices = neigh_choices)),
-               mainPanel(
-                 htmlOutput("neigh_minmax")
+    tabPanel("Rankings",
+             tabsetPanel( 
+               tabPanel("Boston",
+                        sidebarLayout(
+                          sidebarPanel("hello"),
+                          mainPanel(
+                            htmlOutput("bos_minmax")))),
+               tabPanel("Neighborhoods",  
+                        sidebarLayout(
+                          sidebarPanel(
+                            radioButtons(inputId = "neigh_select", 
+                                         label = "Select Neighborhood", 
+                                         choices = neigh_choices)),
+                          mainPanel(
+                            htmlOutput("neigh_minmax")
+                          )
+                        )
                )
              )
     )
@@ -701,7 +663,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   #MAPS #############################################################################################################################
-  output$race_map <- renderLeaflet({MAP_FUNC(input$race, input$race_bool, race_div_tract)})#, zoom_lvl = input$zoom)})
+  output$race_map <- renderLeaflet({MAP_FUNC(input$race, input$race_bool, race_div_tract)})
   output$pob_map <- renderLeaflet({MAP_FUNC(input$pob, input$pob_bool, pob_div_tract)})
   output$hh_map <- renderLeaflet({MAP_FUNC(input$hh, input$hh_bool, hh_div_tract)})
   output$lang_map <- renderLeaflet({MAP_FUNC(input$lang, input$lang_bool, lang_div_tract)})
@@ -749,8 +711,8 @@ server <- function(input, output, session) {
   observeEvent(input$age_help, {showModal(raw_scale_dialog)})
   
   #MINMAX #########################################################################################################################
-  output$bos_minmax <- renderText(BUILD_MINMAX_CITY())
-  output$neigh_minmax <- renderText(BUILD_MINMAX_NEIGH(input$neigh_select))
+  output$bos_minmax <- renderText(GET_MINMAX_CITY())
+  output$neigh_minmax <- renderText(GET_MINMAX_NEIGH(input$neigh_select))
   
   #NEIGHBORHOOD BUTTONS ###########################################################################################################
   output$race_neigh_download <- downloadHandler(
@@ -803,6 +765,5 @@ server <- function(input, output, session) {
       {readr::write_csv(CITY_BUTTON_FUNC(input$age, age_div_cities), file)})
   
   }
-
 # Run the application 
 shinyApp(ui = ui, server = server)

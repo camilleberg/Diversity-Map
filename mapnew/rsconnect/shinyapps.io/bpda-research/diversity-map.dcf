@@ -1,13 +1,13 @@
 name: diversity-map
-title:
+title: diversity-map
 username:
 account: bpda-research
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 8078596
-bundleId: 6894035
+bundleId: 7071389
 url: https://bpda-research.shinyapps.io/diversity-map/
-when: 1677525600.79996
-lastSyncTime: 1677525600.79996
+when: 1681142459.42961
+lastSyncTime: 1681142459.42961
 asMultiple: FALSE
 asStatic: FALSE
